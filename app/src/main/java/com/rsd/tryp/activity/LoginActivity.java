@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -26,7 +25,8 @@ import butterknife.InjectView;
 
 public class LoginActivity extends Activity implements LoginView, LinearForm  {
 
-    private static final int DEFAULT_POSITION = 1;
+    private static final int DEFAULT_VALUE = 1;
+    private static final int GONE = 0;
     private static final long LAYOUT_TRANSLATION_DURATION = 250;
     private static final int LAYOUT_TRANSLATION = 150;
     private static final float MINIMUM_SCALE_VALUE = .96f;
@@ -66,7 +66,7 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
         // Test for orientation as we only want to translate our views in portrait
         // otherwise the views clip in landscape
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mLayoutTranslation = 0;
+            mLayoutTranslation = GONE;
         } else {
             mLayoutTranslation = -LAYOUT_TRANSLATION;
         }
@@ -86,6 +86,15 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
     }
 
     @Override
+    public void onBackPressed() {
+        if (mLabelErrorMessage.getText().toString().length() > 0) {
+            clearErrorMessage();
+        } else {
+            mLinearEditText.setPreviousState();
+        }
+    }
+
+    @Override
     public void hideInputContainer() {
         mInputContainer.setY(mRootContainer.getHeight());
     }
@@ -97,7 +106,7 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
 
     @Override
     public void showTitle() {
-        mTitle.animate().scaleX(DEFAULT_POSITION).scaleY(DEFAULT_POSITION);
+        mTitle.animate().scaleX(DEFAULT_VALUE).scaleY(DEFAULT_VALUE);
     }
 
     @Override
@@ -107,7 +116,7 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
 
     @Override
     public void showInputContainer() {
-        mInputContainer.animate().setDuration(AnimationDuration.LONG).translationY(DEFAULT_POSITION);
+        mInputContainer.animate().setDuration(AnimationDuration.LONG).translationY(DEFAULT_VALUE);
     }
 
     /**
@@ -125,7 +134,7 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
                     mInputContainer.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(mLayoutTranslation);
                 } else {
                     mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInputContainerHeight);
-                    mInputContainer.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(DEFAULT_POSITION);
+                    mInputContainer.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(DEFAULT_VALUE);
                 }
             }
 
@@ -140,22 +149,20 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
     }
 
     public void onValidInputEntered(final String inputLabel, final String flowLabelIndicator) {
-        mLabelErrorMessage.animate().alpha(0).withEndAction(new Runnable() {
+        mLabelErrorMessage.animate().alpha(GONE).withEndAction(new Runnable() {
             @Override
             public void run() {
-                mLabelErrorMessage.setVisibility(View.GONE);
-                mLabelErrorMessage.setText("");
-                mLabelErrorMessage.setAlpha(DEFAULT_POSITION);
+                clearErrorMessage();
             }
         });
 
-        mLabel.animate().translationY(-mLabel.getHeight()).alpha(0).withEndAction(new Runnable() {
+        mLabel.animate().translationY(-mLabel.getHeight()).alpha(GONE).withEndAction(new Runnable() {
             @Override
             public void run() {
                 mLabel.setY(mLabel.getHeight());
                 mLabel.setText(inputLabel);
-                mLabel.animate().setDuration(AnimationDuration.SHORT).alpha(DEFAULT_POSITION);
-                mLabel.animate().translationY(DEFAULT_POSITION);
+                mLabel.animate().setDuration(AnimationDuration.SHORT).alpha(DEFAULT_VALUE);
+                mLabel.animate().translationY(DEFAULT_VALUE);
                 mLabelFlowIndicator.setText(flowLabelIndicator);
             }
         });
@@ -167,14 +174,14 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
             mLabelErrorMessage.animate().setDuration(AnimationDuration.SHORT).scaleX(MINIMUM_SCALE_VALUE).scaleY(MINIMUM_SCALE_VALUE).setInterpolator(new OvershootInterpolator(6f)).withEndAction(new Runnable() {
                 @Override
                 public void run() {
-                    mLabelErrorMessage.animate().setDuration(AnimationDuration.SHORT).scaleX(DEFAULT_POSITION).scaleY(DEFAULT_POSITION);
+                    mLabelErrorMessage.animate().setDuration(AnimationDuration.SHORT).scaleX(DEFAULT_VALUE).scaleY(DEFAULT_VALUE);
                 }
             });
         } else {
             mLabelErrorMessage.setVisibility(View.VISIBLE);
-            mLabelErrorMessage.setScaleX(DEFAULT_POSITION);
+            mLabelErrorMessage.setScaleX(DEFAULT_VALUE);
             mLabelErrorMessage.setText(errorMessage);
-            mLabelErrorMessage.animate().setDuration(AnimationDuration.LONG).scaleX(DEFAULT_POSITION);
+            mLabelErrorMessage.animate().setDuration(AnimationDuration.LONG).scaleX(DEFAULT_VALUE);
         }
     }
 
@@ -191,5 +198,11 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
     @Override
     public void hideProgress() {
 
+    }
+
+    private void clearErrorMessage() {
+        mLabelErrorMessage.setVisibility(View.GONE);
+        mLabelErrorMessage.setText("");
+        mLabelErrorMessage.setAlpha(DEFAULT_VALUE);
     }
 }

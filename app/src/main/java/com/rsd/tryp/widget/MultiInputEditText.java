@@ -160,4 +160,15 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
     private void clearText() {
         setText("");
     }
+
+    public void setPreviousState() {
+        switch (mFormState) {
+            case PASSWORD:
+                mFormState = FormState.EMAIL;
+                break;
+            case PASSWORD_CONFIRMATION:
+                mFormState = FormState.PASSWORD;
+                break;
+        }
+    }
 }
