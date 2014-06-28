@@ -31,6 +31,7 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
 
     private LoginPresenter mPresenter;
     private int mLayoutTranslation;
+    private int mInputContainerHeight;
 
     @InjectView(R.id.activity_login_container_root)
     RelativeLayout mRootContainer;
@@ -74,6 +75,10 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
             public void onGlobalLayout() {
                 mPresenter = new LoginPresenterImpl(getApplicationContext(), LoginActivity.this);
                 mRootContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                // We cache this value as the height can change depending on error messages shown
+                // so we keep the original value so the title doesn't translate unnecessarily
+                mInputContainerHeight = mInputContainer.getHeight();
             }
         });
     }
@@ -119,10 +124,10 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
             @Override
             public void onGlobalLayout() {
                 if (isKeyboardShowing()) {
-                    mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInputContainer.getHeight() + mLayoutTranslation);
+                    mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInputContainerHeight + mLayoutTranslation);
                     mInputContainer.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(mLayoutTranslation);
                 } else {
-                    mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInputContainer.getHeight());
+                    mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInputContainerHeight);
                     mInputContainer.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(DEFAULT_POSITION);
                 }
             }
