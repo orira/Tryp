@@ -28,7 +28,7 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
 
     private static final int DEFAULT_POSITION = 1;
     private static final long LAYOUT_TRANSLATION_DURATION = 250;
-    private static final int LAYOUT_TRANSLATION = -150;
+    private static final int LAYOUT_TRANSLATION = 150;
     private static final float MINIMUM_SCALE_VALUE = .96f;
 
     private LoginPresenter mPresenter;
