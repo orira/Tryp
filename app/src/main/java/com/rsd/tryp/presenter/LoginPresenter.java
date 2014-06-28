@@ -6,6 +6,5 @@ package com.rsd.tryp.presenter;
 public interface LoginPresenter {
     void blurBackground();
     void submitCredentials(String email, String password);
-    void validateCredentials(String email, String password);
     void onSuccess();
 }

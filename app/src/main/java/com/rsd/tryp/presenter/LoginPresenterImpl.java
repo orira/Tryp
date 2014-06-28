@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 
 import com.rsd.tryp.R;
+import com.rsd.tryp.animation.AnimationDuration;
 import com.rsd.tryp.service.LoginService;
 import com.rsd.tryp.service.LoginServiceImpl;
 import com.rsd.tryp.util.BlurUtil;
@@ -16,6 +17,9 @@ import com.rsd.tryp.view.LoginView;
  * Created by Raukawa on 6/28/2014.
  */
 public class LoginPresenterImpl implements LoginPresenter {
+    
+    private static final int INITIALISATION_DELAY = 1500;
+
     private Context mContext;
     private LoginView mLoginView;
     private LoginService mService;
@@ -31,7 +35,7 @@ public class LoginPresenterImpl implements LoginPresenter {
             public void run() {
                 initialiseView();
             }
-        }, 300);
+        }, AnimationDuration.STANDARD);
     }
 
     private void initialiseView() {
@@ -45,7 +49,7 @@ public class LoginPresenterImpl implements LoginPresenter {
                 mLoginView.showInputContainer();
                 mLoginView.setKeyboardShowingListener();
             }
-        }, 1500);
+        }, INITIALISATION_DELAY);
     }
 
     @Override
@@ -57,17 +61,12 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
-    public void validateCredentials(String username, String password) {
+    public void submitCredentials(String email, String password) {
 
     }
 
     @Override
     public void onSuccess() {
-
-    }
-
-    @Override
-    public void submitCredentials(String email, String password) {
 
     }
 }

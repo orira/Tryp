@@ -4,4 +4,25 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="MatchParent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="WrapContent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="MatchParentWidth" parent="WrapContent">
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="StandardPaddingRootContainer" parent="MatchParent">
+        <item name="android:paddingLeft">@dimen/padding_horizontal_default</item>
+        <item name="android:paddingRight">@dimen/padding_horizontal_default</item>
+        <item name="android:paddingTop">@dimen/padding_vertical_default</item>
+        <item name="android:paddingBottom">@dimen/padding_vertical_default</item>
+    </style>
+
 </resources>

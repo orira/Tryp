@@ -28,6 +28,8 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
 
     private static final int DEFAULT_POSITION = 1;
     private static final long LAYOUT_TRANSLATION_DURATION = 250;
+    private static final int LAYOUT_TRANSLATION = -150;
+    private static final float MINIMUM_SCALE_VALUE = .96f;
 
     private LoginPresenter mPresenter;
     private int mLayoutTranslation;
@@ -66,10 +68,10 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mLayoutTranslation = 0;
         } else {
-            mLayoutTranslation = -150;
+            mLayoutTranslation = -LAYOUT_TRANSLATION;
         }
 
-        // Run animations once view has been rendered
+        // Delegate to presenter for view initialisation only once the view has been rendered
         mRootContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -81,6 +83,11 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
                 mInputContainerHeight = mInputContainer.getHeight();
             }
         });
+    }
+
+    @Override
+    public void hideInputContainer() {
+        mInputContainer.setY(mRootContainer.getHeight());
     }
 
     @Override
@@ -99,25 +106,15 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
     }
 
     @Override
-    public void hideInputContainer() {
-        mInputContainer.setY(mRootContainer.getHeight());
-    }
-
-    @Override
     public void showInputContainer() {
         mInputContainer.animate().setDuration(AnimationDuration.LONG).translationY(DEFAULT_POSITION);
     }
 
-    @Override
-    public void showProgress() {
-
-    }
-
-    @Override
-    public void hideProgress() {
-
-    }
-
+    /**
+     * We need to animate the title and input container above the keyboard when showing, and return
+     * the elements to their default co-ordinates when the keyboard is dismissed.  Of special import
+     * is that they are only translated in portrait.
+     */
     @Override
     public void setKeyboardShowingListener() {
         mRootContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -157,8 +154,8 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
             public void run() {
                 mLabel.setY(mLabel.getHeight());
                 mLabel.setText(inputLabel);
-                mLabel.animate().setDuration(AnimationDuration.SHORT).alpha(1);
-                mLabel.animate().translationY(1);
+                mLabel.animate().setDuration(AnimationDuration.SHORT).alpha(DEFAULT_POSITION);
+                mLabel.animate().translationY(DEFAULT_POSITION);
                 mLabelFlowIndicator.setText(flowLabelIndicator);
             }
         });
@@ -167,7 +164,7 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
     @Override
     public void onInvalidInputEntered(String errorMessage) {
         if (mLabelErrorMessage.getText().toString().equals(errorMessage)) {
-            mLabelErrorMessage.animate().setDuration(AnimationDuration.SHORT).scaleX(.96f).scaleY(.96f).setInterpolator(new OvershootInterpolator(6f)).withEndAction(new Runnable() {
+            mLabelErrorMessage.animate().setDuration(AnimationDuration.SHORT).scaleX(MINIMUM_SCALE_VALUE).scaleY(MINIMUM_SCALE_VALUE).setInterpolator(new OvershootInterpolator(6f)).withEndAction(new Runnable() {
                 @Override
                 public void run() {
                     mLabelErrorMessage.animate().setDuration(AnimationDuration.SHORT).scaleX(DEFAULT_POSITION).scaleY(DEFAULT_POSITION);
@@ -175,14 +172,24 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
             });
         } else {
             mLabelErrorMessage.setVisibility(View.VISIBLE);
-            mLabelErrorMessage.setScaleX(0);
+            mLabelErrorMessage.setScaleX(DEFAULT_POSITION);
             mLabelErrorMessage.setText(errorMessage);
-            mLabelErrorMessage.animate().setDuration(AnimationDuration.LONG).scaleX(1);
+            mLabelErrorMessage.animate().setDuration(AnimationDuration.LONG).scaleX(DEFAULT_POSITION);
         }
     }
 
     @Override
     public void submitCredentials(String email, String password) {
         mPresenter.submitCredentials(email, password);
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
     }
 }
