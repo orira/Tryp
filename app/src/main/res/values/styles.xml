@@ -25,4 +25,10 @@
         <item name="android:paddingBottom">@dimen/padding_vertical_default</item>
     </style>
 
+    <style name="ContainerInput" parent="MatchParentWidth">
+        <item name="android:background">@color/translucent_white</item>
+        <item name="android:padding">@dimen/padding_default</item>
+        <item name="android:layout_centerInParent">true</item>
+    </style>
+
 </resources>

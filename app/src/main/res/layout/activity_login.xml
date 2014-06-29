@@ -22,12 +22,7 @@
 
     <RelativeLayout
         android:id="@+id/activity_login_container_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:alpha=".9"
-        android:padding="@dimen/padding_default"
-        android:layout_centerInParent="true"
+        style="@style/ContainerInput"
         android:animateLayoutChanges="true">
 
         <com.rsd.tryp.widget.RobotoTextView
@@ -70,5 +65,36 @@
             android:layout_alignParentRight="true"
             android:layout_marginLeft="@dimen/padding_default_half" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_login_container_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <com.rsd.tryp.widget.RobotoButton
+            android:id="@+id/btn_sign_in"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_background_primary"
+            android:textColor="@android:color/white"
+            android:text="@string/button_text_sign_in"
+            android:layout_marginRight="@dimen/padding_default"
+            custom:typeface="REGULAR" />
+
+        <com.rsd.tryp.widget.RobotoButton
+            android:id="@+id/btn_register"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_background_secondary"
+            android:textColor="@color/primary_accent"
+            android:text="@string/button_text_register"
+            custom:typeface="THIN" />
+
+    </LinearLayout>
 
 </RelativeLayout>

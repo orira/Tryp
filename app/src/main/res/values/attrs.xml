@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="RobotoTextView">
+    <declare-styleable name="RobotoWidget">
         <attr name="typeface" format="enum">
             <enum name="THIN" value="0" />
             <enum name="LIGHT" value="1" />

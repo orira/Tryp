@@ -3,31 +3,32 @@ package com.rsd.tryp.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.widget.TextView;
+import android.widget.Button;
 
 import com.rsd.tryp.R;
 import com.rsd.tryp.typeface.RobotoTypeface;
 import com.rsd.tryp.util.TypefaceUtil;
 
 /**
- * Created by Raukawa on 6/28/2014.
+ * Created by Raukawa on 6/29/2014.
  */
-public class RobotoTextView extends TextView implements RobotoWidget{
-    public RobotoTextView(Context context) {
+public class RobotoButton extends Button implements RobotoWidget{
+    public RobotoButton(Context context) {
         super(context);
         initialiseTypeface(context, null);
     }
 
-    public RobotoTextView(Context context, AttributeSet attrs) {
+    public RobotoButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialiseTypeface(context, attrs);
     }
 
-    public RobotoTextView(Context context, AttributeSet attrs, int defStyle) {
+    public RobotoButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initialiseTypeface(context, attrs);
     }
 
+    @Override
     public void initialiseTypeface(Context context, AttributeSet attrs) {
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RobotoWidget);
@@ -42,9 +43,5 @@ public class RobotoTextView extends TextView implements RobotoWidget{
                 setTypeface(TypefaceUtil.getFont(context, RobotoTypeface.REGULAR));
             }
         }
-    }
-
-    public boolean isInEditMode() {
-        return true;
     }
 }

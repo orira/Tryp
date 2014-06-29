@@ -8,19 +8,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.rsd.tryp.R;
 import com.rsd.tryp.animation.AnimationDuration;
 import com.rsd.tryp.presenter.LoginPresenter;
 import com.rsd.tryp.presenter.LoginPresenterImpl;
+import com.rsd.tryp.util.DensityUtil;
 import com.rsd.tryp.view.LoginView;
 import com.rsd.tryp.widget.LinearForm;
 import com.rsd.tryp.widget.MultiInputEditText;
+import com.rsd.tryp.widget.RobotoButton;
 import com.rsd.tryp.widget.RobotoTextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 
 public class LoginActivity extends Activity implements LoginView, LinearForm  {
@@ -40,6 +45,15 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
 
     @InjectView(R.id.activity_login_title)
     RobotoTextView mTitle;
+
+    @InjectView(R.id.activity_login_container_register)
+    LinearLayout mRegisterContainer;
+
+    @InjectView(R.id.btn_sign_in)
+    RobotoButton mSignInButton;
+
+    @InjectView(R.id.btn_register)
+    RobotoButton mRegisterButton;
 
     @InjectView(R.id.activity_login_container_input)
     RelativeLayout mInputContainer;
@@ -107,6 +121,33 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
     @Override
     public void showTitle() {
         mTitle.animate().scaleX(DEFAULT_VALUE).scaleY(DEFAULT_VALUE);
+    }
+
+    @Override
+    public void hideRegisterContainer() {
+        mRegisterContainer.setY(mRootContainer.getHeight());
+    }
+
+    @Override
+    public void translateRegisterContainer(boolean translateLeft) {
+        int translation = translateLeft ? -mRootContainer.getHeight() : mRootContainer.getHeight();
+        mRegisterContainer.animate().translationX(translation);
+    }
+
+    @Override
+    public void showRegisterContainer() {
+        mRegisterContainer.animate().setDuration(AnimationDuration.LONG).translationY(DEFAULT_VALUE);
+
+    }
+
+    @Override
+    public void translateSignInButton() {
+        mSignInButton.animate().translationX(mSignInButton.getWidth() + mRootContainer.getPaddingTop());
+    }
+
+    @Override
+    public void translateRegisterButton() {
+        mRegisterButton.animate().translationX(-mRegisterButton.getWidth() - mRootContainer.getPaddingTop());
     }
 
     @Override
@@ -198,6 +239,11 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
     @Override
     public void hideProgress() {
 
+    }
+
+    @OnClick({R.id.btn_register, R.id.btn_sign_in})
+    public void onRegisterOrSignInButtonClick(Button button) {
+        mPresenter.onInitialiseButtonSelected(button);
     }
 
     private void clearErrorMessage() {
