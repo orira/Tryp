@@ -9,18 +9,21 @@ public interface LoginView {
     void blurBackground(BitmapDrawable drawable);
     void showTitle();
     void translateTitle();
-    void hideInputContainer();
-    void showInputContainer();
+
+    void setRegisterContainerOffscreen();
+    void translateRegisterContainerOut(boolean translateLeft);
+    void translateRegisterContainerIn();
+    void showRegisterContainer();
+
+    void setInputContainerOffscreen();
+    void translateInputContainerOut();
+    void translateInputContainerIn();
+
     void showProgress();
     void hideProgress();
 
     void setKeyboardShowingListener();
     void removeKeyboardShowingListener();
 
-    void hideRegisterContainer();
-    void translateRegisterContainer(boolean translateLeft);
-    void showRegisterContainer();
 
-    void translateInputContainerOut();
-    void translateRegisterContainerIn();
 }

@@ -3,6 +3,7 @@ package com.rsd.tryp.widget;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.rsd.tryp.R;
+import com.rsd.tryp.animation.AnimationDuration;
 
 /**
  * Created by Raukawa on 6/28/2014.
@@ -72,7 +74,7 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (withinDrawableBounds(motionEvent.getX())) {
-                    validate();
+                    validateInput();
                     return true;
                 }
         }
@@ -88,28 +90,17 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
         return x >= horizontalThreshold;
     }
 
-    private void validate() {
-        if (isRegistrationFlow()) {
-            switch (mFormState) {
-                case EMAIL:
-                    validateEmail();
-                    break;
-                case PASSWORD:
-                    validatePassword();
-                    break;
-                case PASSWORD_CONFIRMATION:
-                    validateConfirmPassword();
-                    break;
-            }
-        } else {
-            switch (mFormState) {
-                case EMAIL:
-                    validateEmail();
-                    break;
-                case PASSWORD:
-                    validatePassword();
-                    break;
-            }
+    private void validateInput() {
+        switch (mFormState) {
+            case EMAIL:
+                validateEmail();
+                break;
+            case PASSWORD:
+                validatePassword();
+                break;
+            case PASSWORD_CONFIRMATION:
+                validateConfirmPassword();
+                break;
         }
     }
 
@@ -117,8 +108,7 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
         if (isValidEmail()) {
             setPasswordState();
             mEmail = getText().toString();
-            String flowIndicatorText = isRegistrationFlow() ? mResources.getString(R.string.hint_flow_2_registration) : mResources.getString(R.string.hint_flow_2_sign_in);
-            mMultiInputForm.onValidInputEntered(mResources.getString(R.string.hint_password), flowIndicatorText, false);
+            mMultiInputForm.onValidInputEntered(getLabelText(), getFlowIndicatorText());
         } else {
             mEmail = null;
             mMultiInputForm.onInvalidInputEntered(mResources.getString(R.string.error_message_invalid_email));
@@ -137,7 +127,7 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
             if (isRegistrationFlow()) {
                 mFormState = FormState.PASSWORD_CONFIRMATION;
                 mPassword = getText().toString();
-                mMultiInputForm.onValidInputEntered(mResources.getString(R.string.hint_password_confirm), mResources.getString(R.string.hint_flow_3_registration), false);
+                mMultiInputForm.onValidInputEntered(getLabelText(), getFlowIndicatorText());
             } else {
                 // Sign in flow submit credentials
                 mMultiInputForm.submitCredentials(mEmail, mPassword);
@@ -171,7 +161,7 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
 
     private void validateConfirmPassword() {
         if (isValidConfirmPassword()) {
-            mMultiInputForm.submitCredentials(mEmail, mPassword);
+            mMultiInputForm.registerCredentials(mEmail, mPassword);
         } else {
             mMultiInputForm.onInvalidInputEntered(mResources.getString(R.string.error_message_invalid_password_confirm));
         }
@@ -185,21 +175,32 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
 
     public void setPreviousState() {
         clearText();
+
+        String input = null;
+
         switch (mFormState) {
             case PASSWORD_CONFIRMATION:
-                mMultiInputForm.onValidInputEntered(mResources.getString(R.string.hint_password), mResources.getString(R.string.hint_flow_2_registration), true);
                 setPasswordState();
+                input = mPassword;
                 break;
             case PASSWORD:
-                mMultiInputForm.onValidInputEntered(mResources.getString(R.string.hint_email), getInitialFlowIndicatorText(), true);
                 setEmailState();
-                mPassword = null;
+                input = mEmail;
                 break;
             case EMAIL:
-                mMultiInputForm.onValidInputEntered(null, null, true);
-                mEmail = null;
                 break;
         }
+
+        mMultiInputForm.setPreviousFormState(getLabelText(), getFlowIndicatorText(), input);
+
+        // Show previous input once labels have animated to correct state
+        final String finalInput = input;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setText(finalInput);
+            }
+        }, AnimationDuration.STANDARD);
     }
 
     private void setEmailState() {
@@ -220,15 +221,45 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
     }
 
     private void setInitialState() {
-        mMultiInputForm.onValidInputEntered(getResources().getString(R.string.hint_email), getInitialFlowIndicatorText(), false);
+        mMultiInputForm.setInitialFormState(getLabelText(), getFlowIndicatorText());
     }
 
     private boolean isRegistrationFlow() {
         return mFormType == FormType.REGISTRATION;
     }
 
-    private String getInitialFlowIndicatorText() {
-        return isRegistrationFlow() ? getResources().getString(R.string.hint_flow_1_registration) : getResources().getString(R.string.hint_flow_1_sign_in);
+    private String getLabelText() {
+        String labelText = null;
+        switch (mFormState) {
+            case PASSWORD_CONFIRMATION:
+                labelText = mResources.getString(R.string.hint_password_confirm);
+                break;
+            case PASSWORD:
+                labelText = mResources.getString(R.string.hint_password);
+                break;
+            case EMAIL:
+                labelText = mResources.getString(R.string.hint_email);
+                break;
+        }
+
+        return labelText;
+    }
+
+    private String getFlowIndicatorText() {
+        String flowIndicatorText = null;
+        switch (mFormState) {
+            case PASSWORD_CONFIRMATION:
+                flowIndicatorText = mResources.getString(R.string.hint_flow_3_registration);
+                break;
+            case PASSWORD:
+                flowIndicatorText = isRegistrationFlow() ? mResources.getString(R.string.hint_flow_2_registration) : getResources().getString(R.string.hint_flow_2_sign_in);
+                break;
+            case EMAIL:
+                flowIndicatorText = isRegistrationFlow() ? mResources.getString(R.string.hint_flow_1_registration) : getResources().getString(R.string.hint_flow_1_sign_in);
+                break;
+        }
+
+        return flowIndicatorText;
     }
 
     private void clearText() {

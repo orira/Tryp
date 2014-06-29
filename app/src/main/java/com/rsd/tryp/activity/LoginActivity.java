@@ -1,7 +1,6 @@
 package com.rsd.tryp.activity;
 
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import com.rsd.tryp.util.OrientationUtil;
 import com.rsd.tryp.view.LoginView;
 import com.rsd.tryp.widget.MultiInputEditText;
 import com.rsd.tryp.widget.MultiInputForm;
-import com.rsd.tryp.widget.RobotoButton;
 import com.rsd.tryp.widget.RobotoTextView;
 
 import butterknife.ButterKnife;
@@ -48,12 +46,6 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
 
     @InjectView(R.id.activity_login_container_register)
     LinearLayout mRegisterContainer;
-
-    @InjectView(R.id.btn_sign_in)
-    RobotoButton mSignInButton;
-
-    @InjectView(R.id.btn_register)
-    RobotoButton mRegisterButton;
 
     @InjectView(R.id.activity_login_container_input)
     RelativeLayout mInputContainer;
@@ -138,6 +130,8 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
         }
     }
 
+    // LoginView Methods
+
     @Override
     public void blurBackground(BitmapDrawable drawable) {
         mRootContainer.setBackground(drawable);
@@ -150,66 +144,50 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
 
     @Override
     public void translateTitle() {
-        mTitle.animate().setDuration(AnimationDuration.LONG).translationY(-mInputContainer.getHeight());
+        mTitle.animate().setDuration(AnimationDuration.STANDARD).translationY(-mInputContainer.getHeight());
     }
 
     @Override
-    public void hideRegisterContainer() {
+    public void setRegisterContainerOffscreen() {
         mRegisterContainer.setY(mRootContainer.getHeight());
     }
 
     @Override
     public void showRegisterContainer() {
-        mRegisterContainer.animate().setDuration(AnimationDuration.LONG).translationY(DEFAULT_VALUE);
+        mRegisterContainer.animate().setDuration(AnimationDuration.STANDARD).translationY(DEFAULT_VALUE);
     }
 
     @Override
-    public void translateRegisterContainer(boolean translateLeft) {
+    public void translateRegisterContainerOut(boolean translateLeft) {
         int translation = translateLeft ? -mRootContainer.getWidth() : mRootContainer.getWidth();
-        mRegisterContainer.animate().setDuration(AnimationDuration.STANDARD).translationX(translation);
+        mRegisterContainer.animate().setDuration(AnimationDuration.SHORT).translationX(translation);
     }
 
     @Override
     public void translateRegisterContainerIn() {
         long startDelay = OrientationUtil.isLandscape(this) ? AnimationDuration.STANDARD : 0;
-        mRegisterContainer.animate().setDuration(AnimationDuration.LONG).setStartDelay(startDelay).translationX(DEFAULT_VALUE);
-
-        // Either button has been translated out depending on the user's previous selection
-        // animate back to original position
-        int buttonStartDelay = 825;
-        mRegisterButton.animate().setDuration(AnimationDuration.FAST).setStartDelay(buttonStartDelay).translationX(DEFAULT_VALUE);
-        mSignInButton.animate().setDuration(AnimationDuration.FAST).setStartDelay(buttonStartDelay).translationX(DEFAULT_VALUE);
-    }
-
-    /*@Override
-    public void translateSignInButton() {
-        mSignInButton.animate().setDuration(AnimationDuration.FAST).translationX(mSignInButton.getWidth() + mRootContainer.getPaddingTop());
+        mRegisterContainer.animate().setDuration(AnimationDuration.STANDARD).setStartDelay(startDelay).translationX(DEFAULT_VALUE);
     }
 
     @Override
-    public void translateRegisterButton() {
-        mRegisterButton.animate().setDuration(AnimationDuration.FAST).translationX(-mRegisterButton.getWidth() - mRootContainer.getPaddingTop());
-    }*/
-
-    @Override
-    public void hideInputContainer() {
+    public void setInputContainerOffscreen() {
         mInputContainer.setY(mRootContainer.getHeight());
     }
 
     @Override
-    public void showInputContainer() {
+    public void translateInputContainerIn() {
         long startDelay = OrientationUtil.isLandscape(this) ? AnimationDuration.STANDARD : 0;
-        mInputContainer.animate().setDuration(AnimationDuration.LONG).setStartDelay(startDelay).translationY(DEFAULT_VALUE);
+        mInputContainer.animate().setDuration(AnimationDuration.STANDARD).setStartDelay(startDelay).translationY(DEFAULT_VALUE);
     }
 
     @Override
     public void translateInputContainerOut() {
-        mInputContainer.animate().setDuration(AnimationDuration.LONG).translationY(mRootContainer.getHeight()).withEndAction(new Runnable() {
+        mInputContainer.animate().setDuration(AnimationDuration.STANDARD).translationY(mRootContainer.getHeight()).withEndAction(new Runnable() {
             @Override
             public void run() {
                 // We set the y position to the bottom of the screen so when back is selected we can
                 // close the app
-                hideInputContainer();
+                setInputContainerOffscreen();
             }
         });
     }
@@ -224,7 +202,37 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
         mRootContainer.getViewTreeObserver().removeOnGlobalLayoutListener(mKeyboardShowingListener);
     }
 
-    public void onValidInputEntered(final String inputLabel, final String flowLabelIndicator, boolean previousState) {
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    // MulitInputForm Methods
+
+    @Override
+    public void setInitialFormState(String initialLabel, String initialFlowInicatorText) {
+        mLabel.setText(initialLabel);
+        mLabelFlowIndicator.setText(initialFlowInicatorText);
+    }
+
+    @Override
+    public void setPreviousFormState(String previousLabel, String previousFlowIndicatorText, String previousInput) {
+        if (previousInput == null) {
+            mPresenter.onInitialStateRequested();
+
+            return;
+        }
+
+        animateToCorrectFormLabel(mLabel.getHeight(), -mLabel.getHeight(), previousLabel, previousFlowIndicatorText);
+    }
+
+    @Override
+    public void onValidInputEntered(final String inputLabel, final String flowLabelIndicatorText) {
         mLabelErrorMessage.animate().alpha(GONE).withEndAction(new Runnable() {
             @Override
             public void run() {
@@ -232,27 +240,7 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
             }
         });
 
-        if (inputLabel == null) {
-            mPresenter.onInitialStateRequested();
-
-            return;
-        }
-
-        // We either animate from the top or from the bottom depending on whether the user is choosing
-        // to progress forwards or backwards through the flow
-        int translationValue = previousState ? mLabel.getHeight() : -mLabel.getHeight();
-        final int yPosition= previousState ? -mLabel.getHeight() : mLabel.getHeight();
-
-        mLabel.animate().translationY(translationValue).alpha(GONE).withEndAction(new Runnable() {
-            @Override
-            public void run() {
-                mLabel.setY(yPosition);
-                mLabel.setText(inputLabel);
-                mLabel.animate().setDuration(AnimationDuration.SHORT).alpha(DEFAULT_VALUE);
-                mLabel.animate().translationY(DEFAULT_VALUE);
-                mLabelFlowIndicator.setText(flowLabelIndicator);
-            }
-        });
+        animateToCorrectFormLabel(-mLabel.getHeight(), mLabel.getHeight(), inputLabel, flowLabelIndicatorText);
     }
 
     @Override
@@ -278,13 +266,21 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
     }
 
     @Override
-    public void showProgress() {
-
+    public void registerCredentials(String email, String password) {
+        mPresenter.registerCredentials(email, password);
     }
 
-    @Override
-    public void hideProgress() {
-
+    private void animateToCorrectFormLabel(int translationValue, final int yPosition, final String inputLabel, final String initialFlowIndicatorText) {
+        mLabel.animate().translationY(translationValue).alpha(GONE).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                mLabel.setY(yPosition);
+                mLabel.setText(inputLabel);
+                mLabel.animate().setDuration(AnimationDuration.SHORT).alpha(DEFAULT_VALUE);
+                mLabel.animate().translationY(DEFAULT_VALUE);
+                mLabelFlowIndicator.setText(initialFlowIndicatorText);
+            }
+        });
     }
 
     @OnClick({R.id.btn_register, R.id.btn_sign_in})
