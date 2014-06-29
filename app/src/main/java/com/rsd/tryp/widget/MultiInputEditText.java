@@ -15,6 +15,7 @@ import android.widget.EditText;
 
 import com.rsd.tryp.R;
 import com.rsd.tryp.animation.AnimationDuration;
+import com.rsd.tryp.util.OrientationUtil;
 
 /**
  * Created by Raukawa on 6/28/2014.
@@ -75,7 +76,6 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
             case MotionEvent.ACTION_DOWN:
                 if (withinDrawableBounds(motionEvent.getX())) {
                     validateInput();
-                    return true;
                 }
         }
 
