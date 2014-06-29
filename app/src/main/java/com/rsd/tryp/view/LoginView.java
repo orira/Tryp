@@ -15,11 +15,12 @@ public interface LoginView {
     void hideProgress();
 
     void setKeyboardShowingListener();
+    void removeKeyboardShowingListener();
 
     void hideRegisterContainer();
     void translateRegisterContainer(boolean translateLeft);
     void showRegisterContainer();
-    void translateSignInButton();
 
-    void translateRegisterButton();
+    void translateInputContainerOut();
+    void translateRegisterContainerIn();
 }

@@ -10,4 +10,6 @@ public interface LoginPresenter {
     void onInitialiseButtonSelected(Button button);
     void submitCredentials(String email, String password);
     void onSuccess();
+
+    void onInitialStateRequested();
 }

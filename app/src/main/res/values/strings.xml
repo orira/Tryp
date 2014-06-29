@@ -7,15 +7,20 @@
     <!-- Login Screen Strings -->
     <string name="hint_email">E-mail</string>
     <string name="hint_password">Password</string>
-    <string name="label_password">Password</string>
+    <string name="hint_password_confirm">Confirm password</string>
+
     <string name="error_message_invalid_email">You have entered an invalid email address</string>
-    <string name="label_password_confirm">Confirm password</string>
     <string name="error_message_invalid_password_empty">Please enter a password</string>
     <string name="error_message_invalid_password_length">Your password needs to be at least 6 characters in length</string>
     <string name="error_message_invalid_password_confirm">Your password does not match the previously entered password</string>
-    <string name="hint_flow_1">1/3</string>
-    <string name="hint_flow_2">2/3</string>
-    <string name="hint_flow_3">3/3</string>
+
+    <string name="hint_flow_1_registration">1/3</string>
+    <string name="hint_flow_2_registration">2/3</string>
+    <string name="hint_flow_3_registration">3/3</string>
+
+    <string name="hint_flow_1_sign_in">1/2</string>
+    <string name="hint_flow_2_sign_in">2/2</string>
+
     <string name="button_text_sign_in">Sign in</string>
     <string name="button_text_register">Register</string>
 

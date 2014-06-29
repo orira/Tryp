@@ -3,7 +3,10 @@ package com.rsd.tryp.widget;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
+import android.text.method.SingleLineTransformationMethod;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +19,11 @@ import com.rsd.tryp.R;
  */
 public class MultiInputEditText extends EditText implements View.OnTouchListener {
 
+    public enum FormType {
+        REGISTRATION,
+        SIGN_IN;
+    }
+
     private enum FormState {
         EMAIL,
         PASSWORD,
@@ -26,10 +34,11 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
 
     private Resources mResources;
     private Drawable mActionDrawable;
-    private LinearForm mLinearForm;
+    private MultiInputForm mMultiInputForm;
     private String mEmail;
     private String mPassword;
     private FormState mFormState;
+    private FormType mFormType;
 
     public MultiInputEditText(Context context) {
         super(context);
@@ -54,8 +63,8 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
         this.setOnTouchListener(this);
     }
 
-    public void setLinearForm(LinearForm linearForm) {
-        mLinearForm = linearForm;
+    public void setMultiInputForm(MultiInputForm multiInputForm) {
+        mMultiInputForm = multiInputForm;
     }
 
     @Override
@@ -80,27 +89,39 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
     }
 
     private void validate() {
-        switch (mFormState) {
-            case EMAIL:
-                validateEmail();
-                break;
-            case PASSWORD:
-                validatePassword();
-                break;
-            case PASSWORD_CONFIRMATION:
-                validateConfirmPassword();
-                break;
+        if (isRegistrationFlow()) {
+            switch (mFormState) {
+                case EMAIL:
+                    validateEmail();
+                    break;
+                case PASSWORD:
+                    validatePassword();
+                    break;
+                case PASSWORD_CONFIRMATION:
+                    validateConfirmPassword();
+                    break;
+            }
+        } else {
+            switch (mFormState) {
+                case EMAIL:
+                    validateEmail();
+                    break;
+                case PASSWORD:
+                    validatePassword();
+                    break;
+            }
         }
     }
 
     private void validateEmail() {
         if (isValidEmail()) {
-            mFormState = FormState.PASSWORD;
+            setPasswordState();
             mEmail = getText().toString();
-            mLinearForm.onValidInputEntered(mResources.getString(R.string.label_password), mResources.getString(R.string.hint_flow_2));
+            String flowIndicatorText = isRegistrationFlow() ? mResources.getString(R.string.hint_flow_2_registration) : mResources.getString(R.string.hint_flow_2_sign_in);
+            mMultiInputForm.onValidInputEntered(mResources.getString(R.string.hint_password), flowIndicatorText, false);
         } else {
             mEmail = null;
-            mLinearForm.onInvalidInputEntered(mResources.getString(R.string.error_message_invalid_email));
+            mMultiInputForm.onInvalidInputEntered(mResources.getString(R.string.error_message_invalid_email));
         }
 
         clearText();
@@ -113,12 +134,17 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
 
     private void validatePassword() {
         if (isValidPassword()) {
-            mFormState = FormState.PASSWORD_CONFIRMATION;
-            mPassword = getText().toString();
-            mLinearForm.onValidInputEntered(mResources.getString(R.string.label_password_confirm), mResources.getString(R.string.hint_flow_3));
+            if (isRegistrationFlow()) {
+                mFormState = FormState.PASSWORD_CONFIRMATION;
+                mPassword = getText().toString();
+                mMultiInputForm.onValidInputEntered(mResources.getString(R.string.hint_password_confirm), mResources.getString(R.string.hint_flow_3_registration), false);
+            } else {
+                // Sign in flow submit credentials
+                mMultiInputForm.submitCredentials(mEmail, mPassword);
+            }
         } else {
             mPassword = null;
-            mLinearForm.onInvalidInputEntered(getInvalidPasswordMessage());
+            mMultiInputForm.onInvalidInputEntered(getInvalidPasswordMessage());
         }
 
         clearText();
@@ -145,9 +171,9 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
 
     private void validateConfirmPassword() {
         if (isValidConfirmPassword()) {
-            mLinearForm.submitCredentials(mEmail, mPassword);
+            mMultiInputForm.submitCredentials(mEmail, mPassword);
         } else {
-            mLinearForm.onInvalidInputEntered(mResources.getString(R.string.error_message_invalid_password_confirm));
+            mMultiInputForm.onInvalidInputEntered(mResources.getString(R.string.error_message_invalid_password_confirm));
         }
 
         clearText();
@@ -157,18 +183,55 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
         return getText().toString().equals(mPassword);
     }
 
-    private void clearText() {
-        setText("");
-    }
-
     public void setPreviousState() {
+        clearText();
         switch (mFormState) {
-            case PASSWORD:
-                mFormState = FormState.EMAIL;
-                break;
             case PASSWORD_CONFIRMATION:
-                mFormState = FormState.PASSWORD;
+                mMultiInputForm.onValidInputEntered(mResources.getString(R.string.hint_password), mResources.getString(R.string.hint_flow_2_registration), true);
+                setPasswordState();
+                break;
+            case PASSWORD:
+                mMultiInputForm.onValidInputEntered(mResources.getString(R.string.hint_email), getInitialFlowIndicatorText(), true);
+                setEmailState();
+                mPassword = null;
+                break;
+            case EMAIL:
+                mMultiInputForm.onValidInputEntered(null, null, true);
+                mEmail = null;
                 break;
         }
+    }
+
+    private void setEmailState() {
+        mFormState = FormState.EMAIL;
+        setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        setTransformationMethod(SingleLineTransformationMethod.getInstance());
+    }
+
+    private void setPasswordState() {
+        mFormState = FormState.PASSWORD;
+        setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        setTransformationMethod(PasswordTransformationMethod.getInstance());
+    }
+
+    public void setFormType(FormType formType) {
+        mFormType = formType;
+        setInitialState();
+    }
+
+    private void setInitialState() {
+        mMultiInputForm.onValidInputEntered(getResources().getString(R.string.hint_email), getInitialFlowIndicatorText(), false);
+    }
+
+    private boolean isRegistrationFlow() {
+        return mFormType == FormType.REGISTRATION;
+    }
+
+    private String getInitialFlowIndicatorText() {
+        return isRegistrationFlow() ? getResources().getString(R.string.hint_flow_1_registration) : getResources().getString(R.string.hint_flow_1_sign_in);
+    }
+
+    private void clearText() {
+        setText("");
     }
 }

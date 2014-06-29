@@ -47,15 +47,6 @@ public class LoginPresenterImpl implements LoginPresenter {
         blurBackground();
         mLoginView.showTitle();
 
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mLoginView.translateTitle();
-                mLoginView.showInputContainer();
-                mLoginView.setKeyboardShowingListener();
-            }
-        }, INITIALISATION_DELAY);*/
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -75,15 +66,8 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     @Override
     public void onInitialiseButtonSelected(Button button) {
-        boolean translateLeft = true;
-        if (isSignInButtonSelected(button)) {
-            translateLeft = false;
-            mLoginView.translateSignInButton();
-        } else {
-            mLoginView.translateRegisterButton();
-        }
-
-        mLoginView.translateRegisterContainer(translateLeft);
+        mLoginView.setKeyboardShowingListener();
+        mLoginView.translateRegisterContainer(isSignInButtonSelected(button));
         mLoginView.showInputContainer();
     }
 
@@ -99,5 +83,12 @@ public class LoginPresenterImpl implements LoginPresenter {
     @Override
     public void onSuccess() {
 
+    }
+
+    @Override
+    public void onInitialStateRequested() {
+        mLoginView.removeKeyboardShowingListener();
+        mLoginView.translateInputContainerOut();
+        mLoginView.translateRegisterContainerIn();
     }
 }

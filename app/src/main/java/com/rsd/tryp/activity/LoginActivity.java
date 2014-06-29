@@ -16,10 +16,10 @@ import com.rsd.tryp.R;
 import com.rsd.tryp.animation.AnimationDuration;
 import com.rsd.tryp.presenter.LoginPresenter;
 import com.rsd.tryp.presenter.LoginPresenterImpl;
-import com.rsd.tryp.util.DensityUtil;
+import com.rsd.tryp.util.OrientationUtil;
 import com.rsd.tryp.view.LoginView;
-import com.rsd.tryp.widget.LinearForm;
 import com.rsd.tryp.widget.MultiInputEditText;
+import com.rsd.tryp.widget.MultiInputForm;
 import com.rsd.tryp.widget.RobotoButton;
 import com.rsd.tryp.widget.RobotoTextView;
 
@@ -28,7 +28,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 
-public class LoginActivity extends Activity implements LoginView, LinearForm  {
+public class LoginActivity extends Activity implements LoginView, MultiInputForm {
 
     private static final int DEFAULT_VALUE = 1;
     private static final int GONE = 0;
@@ -62,7 +62,7 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
     RobotoTextView mLabel;
 
     @InjectView(R.id.activity_login_edit_text)
-    MultiInputEditText mLinearEditText;
+    MultiInputEditText mMultiInputEditText;
 
     @InjectView(R.id.activity_login_label_error_message)
     RobotoTextView mLabelErrorMessage;
@@ -70,16 +70,42 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
     @InjectView(R.id.activity_login_label_flow_indicator)
     RobotoTextView mLabelFlowIndicator;
 
+    /**
+     * We need to animate the title and input container above the keyboard when showing, and return
+     * the elements to their default co-ordinates, when the keyboard is dismissed.  Of special import
+     * is that they are only translated in portrait.
+     */
+    ViewTreeObserver.OnGlobalLayoutListener mKeyboardShowingListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            if (isKeyboardShowing()) {
+                mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInputContainerHeight + mLayoutTranslation);
+                mInputContainer.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(mLayoutTranslation);
+            } else {
+                mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInputContainerHeight);
+                mInputContainer.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(DEFAULT_VALUE);
+            }
+        }
+
+        private boolean isKeyboardShowing() {
+            Rect r = new Rect();
+            mRootContainer.getWindowVisibleDisplayFrame(r);
+            int heightDiff = mRootContainer.getRootView().getHeight() - (r.bottom - r.top);
+
+            return heightDiff > 100;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
-        mLinearEditText.setLinearForm(this);
+        mMultiInputEditText.setMultiInputForm(this);
 
         // Test for orientation as we only want to translate our views in portrait
         // otherwise the views clip in landscape
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (OrientationUtil.isLandscape(this)) {
             mLayoutTranslation = GONE;
         } else {
             mLayoutTranslation = -LAYOUT_TRANSLATION;
@@ -101,16 +127,15 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
 
     @Override
     public void onBackPressed() {
+        if (mInputContainer.getY() == mRootContainer.getHeight()) {
+            super.onBackPressed();
+        }
+
         if (mLabelErrorMessage.getText().toString().length() > 0) {
             clearErrorMessage();
         } else {
-            mLinearEditText.setPreviousState();
+            mMultiInputEditText.setPreviousState();
         }
-    }
-
-    @Override
-    public void hideInputContainer() {
-        mInputContainer.setY(mRootContainer.getHeight());
     }
 
     @Override
@@ -124,72 +149,82 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
     }
 
     @Override
-    public void hideRegisterContainer() {
-        mRegisterContainer.setY(mRootContainer.getHeight());
-    }
-
-    @Override
-    public void translateRegisterContainer(boolean translateLeft) {
-        int translation = translateLeft ? -mRootContainer.getHeight() : mRootContainer.getHeight();
-        mRegisterContainer.animate().translationX(translation);
-    }
-
-    @Override
-    public void showRegisterContainer() {
-        mRegisterContainer.animate().setDuration(AnimationDuration.LONG).translationY(DEFAULT_VALUE);
-
-    }
-
-    @Override
-    public void translateSignInButton() {
-        mSignInButton.animate().translationX(mSignInButton.getWidth() + mRootContainer.getPaddingTop());
-    }
-
-    @Override
-    public void translateRegisterButton() {
-        mRegisterButton.animate().translationX(-mRegisterButton.getWidth() - mRootContainer.getPaddingTop());
-    }
-
-    @Override
     public void translateTitle() {
         mTitle.animate().setDuration(AnimationDuration.LONG).translationY(-mInputContainer.getHeight());
     }
 
     @Override
-    public void showInputContainer() {
-        mInputContainer.animate().setDuration(AnimationDuration.LONG).translationY(DEFAULT_VALUE);
+    public void hideRegisterContainer() {
+        mRegisterContainer.setY(mRootContainer.getHeight());
     }
 
-    /**
-     * We need to animate the title and input container above the keyboard when showing, and return
-     * the elements to their default co-ordinates when the keyboard is dismissed.  Of special import
-     * is that they are only translated in portrait.
-     */
     @Override
-    public void setKeyboardShowingListener() {
-        mRootContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+    public void showRegisterContainer() {
+        mRegisterContainer.animate().setDuration(AnimationDuration.LONG).translationY(DEFAULT_VALUE);
+    }
+
+    @Override
+    public void translateRegisterContainer(boolean translateLeft) {
+        int translation = translateLeft ? -mRootContainer.getWidth() : mRootContainer.getWidth();
+        mRegisterContainer.animate().setDuration(AnimationDuration.STANDARD).translationX(translation);
+    }
+
+    @Override
+    public void translateRegisterContainerIn() {
+        long startDelay = OrientationUtil.isLandscape(this) ? AnimationDuration.STANDARD : 0;
+        mRegisterContainer.animate().setDuration(AnimationDuration.LONG).setStartDelay(startDelay).translationX(DEFAULT_VALUE);
+
+        // Either button has been translated out depending on the user's previous selection
+        // animate back to original position
+        int buttonStartDelay = 825;
+        mRegisterButton.animate().setDuration(AnimationDuration.FAST).setStartDelay(buttonStartDelay).translationX(DEFAULT_VALUE);
+        mSignInButton.animate().setDuration(AnimationDuration.FAST).setStartDelay(buttonStartDelay).translationX(DEFAULT_VALUE);
+    }
+
+    /*@Override
+    public void translateSignInButton() {
+        mSignInButton.animate().setDuration(AnimationDuration.FAST).translationX(mSignInButton.getWidth() + mRootContainer.getPaddingTop());
+    }
+
+    @Override
+    public void translateRegisterButton() {
+        mRegisterButton.animate().setDuration(AnimationDuration.FAST).translationX(-mRegisterButton.getWidth() - mRootContainer.getPaddingTop());
+    }*/
+
+    @Override
+    public void hideInputContainer() {
+        mInputContainer.setY(mRootContainer.getHeight());
+    }
+
+    @Override
+    public void showInputContainer() {
+        long startDelay = OrientationUtil.isLandscape(this) ? AnimationDuration.STANDARD : 0;
+        mInputContainer.animate().setDuration(AnimationDuration.LONG).setStartDelay(startDelay).translationY(DEFAULT_VALUE);
+    }
+
+    @Override
+    public void translateInputContainerOut() {
+        mInputContainer.animate().setDuration(AnimationDuration.LONG).translationY(mRootContainer.getHeight()).withEndAction(new Runnable() {
             @Override
-            public void onGlobalLayout() {
-                if (isKeyboardShowing()) {
-                    mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInputContainerHeight + mLayoutTranslation);
-                    mInputContainer.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(mLayoutTranslation);
-                } else {
-                    mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInputContainerHeight);
-                    mInputContainer.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(DEFAULT_VALUE);
-                }
-            }
-
-            private boolean isKeyboardShowing() {
-                Rect r = new Rect();
-                mRootContainer.getWindowVisibleDisplayFrame(r);
-                int heightDiff = mRootContainer.getRootView().getHeight() - (r.bottom - r.top);
-
-                return heightDiff > 100;
+            public void run() {
+                // We set the y position to the bottom of the screen so when back is selected we can
+                // close the app
+                hideInputContainer();
             }
         });
     }
 
-    public void onValidInputEntered(final String inputLabel, final String flowLabelIndicator) {
+    @Override
+    public void setKeyboardShowingListener() {
+        mRootContainer.getViewTreeObserver().addOnGlobalLayoutListener(mKeyboardShowingListener);
+    }
+
+    @Override
+    public void removeKeyboardShowingListener() {
+        mRootContainer.getViewTreeObserver().removeOnGlobalLayoutListener(mKeyboardShowingListener);
+    }
+
+    public void onValidInputEntered(final String inputLabel, final String flowLabelIndicator, boolean previousState) {
         mLabelErrorMessage.animate().alpha(GONE).withEndAction(new Runnable() {
             @Override
             public void run() {
@@ -197,10 +232,21 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
             }
         });
 
-        mLabel.animate().translationY(-mLabel.getHeight()).alpha(GONE).withEndAction(new Runnable() {
+        if (inputLabel == null) {
+            mPresenter.onInitialStateRequested();
+
+            return;
+        }
+
+        // We either animate from the top or from the bottom depending on whether the user is choosing
+        // to progress forwards or backwards through the flow
+        int translationValue = previousState ? mLabel.getHeight() : -mLabel.getHeight();
+        final int yPosition= previousState ? -mLabel.getHeight() : mLabel.getHeight();
+
+        mLabel.animate().translationY(translationValue).alpha(GONE).withEndAction(new Runnable() {
             @Override
             public void run() {
-                mLabel.setY(mLabel.getHeight());
+                mLabel.setY(yPosition);
                 mLabel.setText(inputLabel);
                 mLabel.animate().setDuration(AnimationDuration.SHORT).alpha(DEFAULT_VALUE);
                 mLabel.animate().translationY(DEFAULT_VALUE);
@@ -243,7 +289,13 @@ public class LoginActivity extends Activity implements LoginView, LinearForm  {
 
     @OnClick({R.id.btn_register, R.id.btn_sign_in})
     public void onRegisterOrSignInButtonClick(Button button) {
+        MultiInputEditText.FormType formType = isRegistrationForm(button) ? MultiInputEditText.FormType.REGISTRATION : MultiInputEditText.FormType.SIGN_IN;
+        mMultiInputEditText.setFormType(formType);
         mPresenter.onInitialiseButtonSelected(button);
+    }
+
+    private boolean isRegistrationForm(Button button) {
+        return button.getText().toString().equals(getString(R.string.button_text_register));
     }
 
     private void clearErrorMessage() {
