@@ -55,6 +55,7 @@ public class InlineInputFragment extends Fragment implements InlineInputView {
     @Override
     public void onStart() {
         super.onStart();
+
         mPresenter = new InlineInputPresenterImpl(getActivity(), this);
         mInlineInputEditText.setInlineInputForm((InlineInputForm) mPresenter);
     }
@@ -83,11 +84,15 @@ public class InlineInputFragment extends Fragment implements InlineInputView {
             @Override
             public void run() {
                 mLabel.setY(yPosition);
-                mLabel.animate().setDuration(AnimationDuration.SHORT).alpha(AnimationConstants.DEFAULT_VALUE);
-                mLabel.animate().translationY(AnimationConstants.DEFAULT_VALUE);
                 mLabel.setText(label);
-                mInlineInputEditText.setText(input);
-                mLabelFlowIndicator.setText(flowIndicatorText);
+                mLabel.animate().setDuration(AnimationDuration.SHORT).alpha(AnimationConstants.DEFAULT_VALUE)
+                        .translationY(AnimationConstants.DEFAULT_VALUE).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        mInlineInputEditText.setText(input);
+                        mLabelFlowIndicator.setText(flowIndicatorText);
+                    }
+                });
             }
         });
     }

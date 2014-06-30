@@ -167,9 +167,8 @@ public class LoginActivity extends Activity implements LoginView {
         mInlineInputFragment.getView().animate().setDuration(AnimationDuration.STANDARD).translationY(mRootContainer.getHeight()).withEndAction(new Runnable() {
             @Override
             public void run() {
-                // We set the y position to the bottom of the screen so when back is selected we can
-                // close the app
-                setInputContainerOffscreen();
+            // We set the y position to the bottom of the screen so when back is selected we can close the app
+            setInputContainerOffscreen();
             }
         });
     }
