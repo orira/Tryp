@@ -102,8 +102,14 @@ public class LoginPresenterImpl implements LoginPresenter {
     public void onInitialStateRequested() {
         mLoginView.removeKeyboardShowingListener();
         mLoginView.translateInputContainerOut();
-        mLoginView.hideGoogleSignIn();
         mLoginView.translateRegisterContainerIn();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLoginView.showGoogleSignIn();
+            }
+        }, AnimationDuration.FAST);
     }
 
     private boolean isSignInButtonSelected(Button button) {
