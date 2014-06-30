@@ -4,21 +4,21 @@ import android.app.Activity;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.rsd.tryp.R;
 import com.rsd.tryp.animation.AnimationDuration;
+import com.rsd.tryp.fragment.InlineInputFragment;
+import com.rsd.tryp.presenter.InlineInputPresenter;
+import com.rsd.tryp.presenter.InlineInputPresenterImpl;
 import com.rsd.tryp.presenter.LoginPresenter;
 import com.rsd.tryp.presenter.LoginPresenterImpl;
+import com.rsd.tryp.util.AnimationConstants;
 import com.rsd.tryp.util.OrientationUtil;
 import com.rsd.tryp.view.LoginView;
-import com.rsd.tryp.widget.MultiInputEditText;
-import com.rsd.tryp.widget.MultiInputForm;
 import com.rsd.tryp.widget.RobotoTextView;
 
 import butterknife.ButterKnife;
@@ -26,17 +26,14 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 
-public class LoginActivity extends Activity implements LoginView, MultiInputForm {
+public class LoginActivity extends Activity implements LoginView {
 
-    private static final int DEFAULT_VALUE = 1;
-    private static final int GONE = 0;
     private static final long LAYOUT_TRANSLATION_DURATION = 250;
     private static final int LAYOUT_TRANSLATION = 150;
-    private static final float MINIMUM_SCALE_VALUE = .96f;
 
     private LoginPresenter mPresenter;
     private int mLayoutTranslation;
-    private int mInputContainerHeight;
+    private int mInlineInputFragmentHeight;
 
     @InjectView(R.id.activity_login_container_root)
     RelativeLayout mRootContainer;
@@ -47,20 +44,7 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
     @InjectView(R.id.activity_login_container_register)
     LinearLayout mRegisterContainer;
 
-    /*@InjectView(R.id.activity_login_container_input)
-    RelativeLayout mInputContainer;
-
-    @InjectView(R.id.activity_login_label)
-    RobotoTextView mLabel;
-
-    @InjectView(R.id.activity_login_edit_text)
-    MultiInputEditText mMultiInputEditText;
-
-    @InjectView(R.id.activity_login_label_error_message)
-    RobotoTextView mLabelErrorMessage;
-
-    @InjectView(R.id.activity_login_label_flow_indicator)
-    RobotoTextView mLabelFlowIndicator;*/
+    InlineInputFragment mInlineInputFragment;
 
     /**
      * We need to animate the title and input container above the keyboard when showing, and return
@@ -71,11 +55,11 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
         @Override
         public void onGlobalLayout() {
             if (isKeyboardShowing()) {
-                mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInputContainerHeight + mLayoutTranslation);
-                mInputContainer.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(mLayoutTranslation);
+                mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInlineInputFragmentHeight + mLayoutTranslation);
+                mInlineInputFragment.getView().animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(mLayoutTranslation);
             } else {
-                mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInputContainerHeight);
-                mInputContainer.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(DEFAULT_VALUE);
+                mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInlineInputFragmentHeight);
+                mInlineInputFragment.getView().animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(AnimationConstants.DEFAULT_VALUE);
             }
         }
 
@@ -93,12 +77,13 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
-        mMultiInputEditText.setMultiInputForm(this);
+
+        mInlineInputFragment = (InlineInputFragment) getFragmentManager().findFragmentById(R.id.activity_login_input_fragment);
 
         // Test for orientation as we only want to translate our views in portrait
         // otherwise the views clip in landscape
         if (OrientationUtil.isLandscape(this)) {
-            mLayoutTranslation = GONE;
+            mLayoutTranslation = AnimationConstants.GONE;
         } else {
             mLayoutTranslation = -LAYOUT_TRANSLATION;
         }
@@ -108,26 +93,23 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
             @Override
             public void onGlobalLayout() {
                 mPresenter = new LoginPresenterImpl(getApplicationContext(), LoginActivity.this);
+                ((InlineInputPresenter) mInlineInputFragment.getPresenter()).setLoginPresenter(mPresenter);
                 mRootContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                 // We cache this value as the height can change depending on error messages shown
                 // so we keep the original value so the title doesn't translate unnecessarily
-                mInputContainerHeight = mInputContainer.getHeight();
+                mInlineInputFragmentHeight = mInlineInputFragment.getView().getHeight();
             }
         });
     }
 
     @Override
     public void onBackPressed() {
-        if (mInputContainer.getY() == mRootContainer.getHeight()) {
+        if (mInlineInputFragment.getView().getY() == mRootContainer.getHeight()) {
             super.onBackPressed();
         }
 
-        if (mLabelErrorMessage.getText().toString().length() > 0) {
-            clearErrorMessage();
-        } else {
-            mMultiInputEditText.setPreviousState();
-        }
+        mInlineInputFragment.getPresenter().onPreviousStateSelected();
     }
 
     // LoginView Methods
@@ -139,12 +121,12 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
 
     @Override
     public void showTitle() {
-        mTitle.animate().scaleX(DEFAULT_VALUE).scaleY(DEFAULT_VALUE);
+        mTitle.animate().scaleX(AnimationConstants.DEFAULT_VALUE).scaleY(AnimationConstants.DEFAULT_VALUE);
     }
 
     @Override
     public void translateTitle() {
-        mTitle.animate().setDuration(AnimationDuration.STANDARD).translationY(-mInputContainer.getHeight());
+        mTitle.animate().setDuration(AnimationDuration.STANDARD).translationY(-mInlineInputFragment.getView().getHeight());
     }
 
     @Override
@@ -154,7 +136,7 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
 
     @Override
     public void showRegisterContainer() {
-        mRegisterContainer.animate().setDuration(AnimationDuration.STANDARD).translationY(DEFAULT_VALUE);
+        mRegisterContainer.animate().setDuration(AnimationDuration.STANDARD).translationY(AnimationConstants.DEFAULT_VALUE);
     }
 
     @Override
@@ -166,23 +148,23 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
     @Override
     public void translateRegisterContainerIn() {
         long startDelay = OrientationUtil.isLandscape(this) ? AnimationDuration.STANDARD : 0;
-        mRegisterContainer.animate().setDuration(AnimationDuration.STANDARD).setStartDelay(startDelay).translationX(DEFAULT_VALUE);
+        mRegisterContainer.animate().setDuration(AnimationDuration.STANDARD).setStartDelay(startDelay).translationX(AnimationConstants.DEFAULT_VALUE);
     }
 
     @Override
     public void setInputContainerOffscreen() {
-        mInputContainer.setY(mRootContainer.getHeight());
+        mInlineInputFragment.getView().setY(mRootContainer.getHeight());
     }
 
     @Override
     public void translateInputContainerIn() {
         long startDelay = OrientationUtil.isLandscape(this) ? AnimationDuration.STANDARD : 0;
-        mInputContainer.animate().setDuration(AnimationDuration.STANDARD).setStartDelay(startDelay).translationY(DEFAULT_VALUE);
+        mInlineInputFragment.getView().animate().setDuration(AnimationDuration.STANDARD).setStartDelay(startDelay).translationY(AnimationConstants.DEFAULT_VALUE);
     }
 
     @Override
     public void translateInputContainerOut() {
-        mInputContainer.animate().setDuration(AnimationDuration.STANDARD).translationY(mRootContainer.getHeight()).withEndAction(new Runnable() {
+        mInlineInputFragment.getView().animate().setDuration(AnimationDuration.STANDARD).translationY(mRootContainer.getHeight()).withEndAction(new Runnable() {
             @Override
             public void run() {
                 // We set the y position to the bottom of the screen so when back is selected we can
@@ -212,91 +194,14 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
 
     }
 
-    // MulitInputForm Methods
-
-    @Override
-    public void setInitialFormState(String initialLabel, String initialFlowInicatorText) {
-        mLabel.setText(initialLabel);
-        mLabelFlowIndicator.setText(initialFlowInicatorText);
-    }
-
-    @Override
-    public void setPreviousFormState(String previousLabel, String previousFlowIndicatorText, String previousInput) {
-        if (previousInput == null) {
-            mPresenter.onInitialStateRequested();
-
-            return;
-        }
-
-        animateToCorrectFormLabel(mLabel.getHeight(), -mLabel.getHeight(), previousLabel, previousFlowIndicatorText);
-    }
-
-    @Override
-    public void onValidInputEntered(final String inputLabel, final String flowLabelIndicatorText) {
-        mLabelErrorMessage.animate().alpha(GONE).withEndAction(new Runnable() {
-            @Override
-            public void run() {
-                clearErrorMessage();
-            }
-        });
-
-        animateToCorrectFormLabel(-mLabel.getHeight(), mLabel.getHeight(), inputLabel, flowLabelIndicatorText);
-    }
-
-    @Override
-    public void onInvalidInputEntered(String errorMessage) {
-        if (mLabelErrorMessage.getText().toString().equals(errorMessage)) {
-            mLabelErrorMessage.animate().setDuration(AnimationDuration.SHORT).scaleX(MINIMUM_SCALE_VALUE).scaleY(MINIMUM_SCALE_VALUE).setInterpolator(new OvershootInterpolator(6f)).withEndAction(new Runnable() {
-                @Override
-                public void run() {
-                    mLabelErrorMessage.animate().setDuration(AnimationDuration.SHORT).scaleX(DEFAULT_VALUE).scaleY(DEFAULT_VALUE);
-                }
-            });
-        } else {
-            mLabelErrorMessage.setVisibility(View.VISIBLE);
-            mLabelErrorMessage.setScaleX(DEFAULT_VALUE);
-            mLabelErrorMessage.setText(errorMessage);
-            mLabelErrorMessage.animate().setDuration(AnimationDuration.LONG).scaleX(DEFAULT_VALUE);
-        }
-    }
-
-    @Override
-    public void submitCredentials(String email, String password) {
-        mPresenter.submitCredentials(email, password);
-    }
-
-    @Override
-    public void registerCredentials(String email, String password) {
-        mPresenter.registerCredentials(email, password);
-    }
-
-    private void animateToCorrectFormLabel(int translationValue, final int yPosition, final String inputLabel, final String initialFlowIndicatorText) {
-        mLabel.animate().translationY(translationValue).alpha(GONE).withEndAction(new Runnable() {
-            @Override
-            public void run() {
-                mLabel.setY(yPosition);
-                mLabel.setText(inputLabel);
-                mLabel.animate().setDuration(AnimationDuration.SHORT).alpha(DEFAULT_VALUE);
-                mLabel.animate().translationY(DEFAULT_VALUE);
-                mLabelFlowIndicator.setText(initialFlowIndicatorText);
-            }
-        });
-    }
-
     @OnClick({R.id.btn_register, R.id.btn_sign_in})
     public void onRegisterOrSignInButtonClick(Button button) {
-        MultiInputEditText.FormType formType = isRegistrationForm(button) ? MultiInputEditText.FormType.REGISTRATION : MultiInputEditText.FormType.SIGN_IN;
-        mMultiInputEditText.setFormType(formType);
+        InlineInputPresenterImpl.FormType formType = isRegistrationForm(button) ? InlineInputPresenterImpl.FormType.REGISTRATION : InlineInputPresenterImpl.FormType.SIGN_IN;
+        mInlineInputFragment.setFormType(formType);
         mPresenter.onInitialiseButtonSelected(button);
     }
 
     private boolean isRegistrationForm(Button button) {
         return button.getText().toString().equals(getString(R.string.button_text_register));
-    }
-
-    private void clearErrorMessage() {
-        mLabelErrorMessage.setVisibility(View.GONE);
-        mLabelErrorMessage.setText("");
-        mLabelErrorMessage.setAlpha(DEFAULT_VALUE);
     }
 }
