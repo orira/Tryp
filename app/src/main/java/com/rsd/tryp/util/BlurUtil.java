@@ -11,7 +11,7 @@ import android.renderscript.ScriptIntrinsicBlur;
  * Created by Raukawa on 6/28/2014.
  */
 public class BlurUtil {
-    private static final float RADIUS_BLUR = 20;
+    private static final float RADIUS_BLUR = 25;
 
     public static Bitmap blurBitmap(Bitmap bitmap, Context context) {
         //Let's create an empty bitmap with the same size of the bitmap we want to blur
@@ -22,7 +22,6 @@ public class BlurUtil {
 
         //Create an Intrinsic Blur Script using the Renderscript
         ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-
 
         //Create the in/out Allocations with the Renderscript and the in/out bitmaps
         Allocation allIn = Allocation.createFromBitmap(rs, bitmap);

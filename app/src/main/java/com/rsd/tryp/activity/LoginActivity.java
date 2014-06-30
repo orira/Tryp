@@ -1,7 +1,6 @@
 package com.rsd.tryp.activity;
 
 import android.app.Activity;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.ViewTreeObserver;
@@ -10,9 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.rsd.tryp.R;
-import com.rsd.tryp.animation.AnimationDuration;
+import com.rsd.tryp.util.AnimationDuration;
 import com.rsd.tryp.fragment.InlineInputFragment;
-import com.rsd.tryp.presenter.InlineInputPresenter;
 import com.rsd.tryp.presenter.InlineInputPresenterImpl;
 import com.rsd.tryp.presenter.LoginPresenter;
 import com.rsd.tryp.presenter.LoginPresenterImpl;

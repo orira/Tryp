@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.rsd.tryp.R;
-import com.rsd.tryp.animation.AnimationDuration;
+import com.rsd.tryp.util.AnimationDuration;
 import com.rsd.tryp.presenter.InlineInputPresenter;
 import com.rsd.tryp.presenter.InlineInputPresenterImpl;
 import com.rsd.tryp.util.AnimationConstants;

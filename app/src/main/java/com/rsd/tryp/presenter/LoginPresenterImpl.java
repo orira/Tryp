@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.widget.Button;
 
 import com.rsd.tryp.R;
-import com.rsd.tryp.animation.AnimationDuration;
+import com.rsd.tryp.util.AnimationDuration;
 import com.rsd.tryp.service.LoginService;
 import com.rsd.tryp.service.LoginServiceImpl;
 import com.rsd.tryp.util.BlurUtil;

@@ -15,13 +15,13 @@ public class InlineInputPresenterImpl implements InlineInputPresenter, InlineInp
 
     public enum FormType {
         REGISTRATION,
-        SIGN_IN;
+        SIGN_IN
     }
 
     public enum FormState {
         EMAIL,
         PASSWORD,
-        PASSWORD_CONFIRMATION;
+        PASSWORD_CONFIRMATION
     }
 
     private static final int VALID_PASSWORD_LENGTH = 6;
@@ -242,9 +242,9 @@ public class InlineInputPresenterImpl implements InlineInputPresenter, InlineInp
 
     private void provideCredentials() {
         if (isRegistrationFlow()) {
-            //Register
+            mLoginPresenter.registerCredentials(mEmail, mPassword);
         } else {
-            //Sign in
+            mLoginPresenter.submitCredentials(mEmail, mPassword);
         }
     }
 
