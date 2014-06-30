@@ -27,49 +27,12 @@
         android:layout_centerInParent="true"
         class="com.rsd.tryp.fragment.InlineInputFragment" />
 
-    <!--<RelativeLayout
-        android:id="@+id/activity_login_container_input"
-        style="@style/ContainerInput"
-        android:animateLayoutChanges="true">
-
-        <com.rsd.tryp.widget.RobotoTextView
-            android:id="@+id/activity_login_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/primary"
-            android:textSize="@dimen/text_large"
-            android:layout_marginLeft="@dimen/padding_default_two_thirds"
-            custom:typeface="THIN" />
-
-        <com.rsd.tryp.widget.InlineInputEditText
-            android:id="@+id/activity_login_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/activity_login_label" />
-
-        <com.rsd.tryp.widget.RobotoTextView
-            android:id="@+id/activity_login_label_error_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_small"
-            android:textColor="@android:color/darker_gray"
-            android:visibility="gone"
-            android:layout_marginLeft="@dimen/padding_default_two_thirds"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/activity_login_edit_text"
-            android:layout_toLeftOf="@+id/activity_login_label_flow_indicator" />
-
-        <com.rsd.tryp.widget.RobotoTextView
-            android:id="@id/activity_login_label_flow_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_small"
-            android:textColor="@android:color/secondary_text_light"
-            android:layout_marginRight="@dimen/padding_default_two_thirds"
-            android:layout_below="@id/activity_login_edit_text"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="@dimen/padding_default_half" />
-    </RelativeLayout>-->
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_login_input_fragment"
+        android:alpha="0" />
 
     <LinearLayout
         android:id="@+id/activity_login_container_register"
@@ -99,7 +62,6 @@
             android:textColor="@color/primary_accent"
             android:text="@string/button_text_register"
             custom:typeface="THIN" />
-
     </LinearLayout>
 
 </RelativeLayout>

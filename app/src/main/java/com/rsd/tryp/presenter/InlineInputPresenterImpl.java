@@ -64,31 +64,12 @@ public class InlineInputPresenterImpl implements InlineInputPresenter, InlineInp
         mInlineInputView.setInitialFlowIndicator(flowIndicatorText);
     }
 
-    // Inline Input Form Methods
-    @Override
-    public void inputProvided(String input) {
-        if (isInputValid(input)) {
-            mInput = "";
-            boolean inputComplete = incrementFormState();
-
-            if (inputComplete) {
-                provideCredentials();
-            } else {
-                setTextValues(false);
-                renderViews(true);
-                mInlineInputView.setEditTextInputMethod(mEditTextPasswordState);
-            }
-        } else {
-            mInlineInputView.setErrorMessage(mErrorMessage);
-        }
-    }
-
+    // Presenter Methods
     @Override
     public void setLoginPresenter(LoginPresenter mPresenter) {
         mLoginPresenter = mPresenter;
     }
 
-    // Presenter Methods
     @Override
     public void setFormType(FormType formType) {
         mFormType = formType;
@@ -108,6 +89,25 @@ public class InlineInputPresenterImpl implements InlineInputPresenter, InlineInp
             setTextValues(true);
             renderViews(false);
             mInlineInputView.setEditTextInputMethod(mEditTextPasswordState);
+        }
+    }
+
+    // Inline Input Form Methods
+    @Override
+    public void inputProvided(String input) {
+        if (isInputValid(input)) {
+            mInput = "";
+            boolean inputComplete = incrementFormState();
+
+            if (inputComplete) {
+                provideCredentials();
+            } else {
+                setTextValues(false);
+                renderViews(true);
+                mInlineInputView.setEditTextInputMethod(mEditTextPasswordState);
+            }
+        } else {
+            mInlineInputView.setErrorMessage(mErrorMessage);
         }
     }
 

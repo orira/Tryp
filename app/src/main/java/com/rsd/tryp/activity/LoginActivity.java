@@ -8,13 +8,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.google.android.gms.common.SignInButton;
 import com.rsd.tryp.R;
-import com.rsd.tryp.util.AnimationDuration;
 import com.rsd.tryp.fragment.InlineInputFragment;
 import com.rsd.tryp.presenter.InlineInputPresenterImpl;
 import com.rsd.tryp.presenter.LoginPresenter;
 import com.rsd.tryp.presenter.LoginPresenterImpl;
 import com.rsd.tryp.util.AnimationConstants;
+import com.rsd.tryp.util.AnimationDuration;
 import com.rsd.tryp.util.KeyboardUtil;
 import com.rsd.tryp.util.OrientationUtil;
 import com.rsd.tryp.view.LoginView;
@@ -27,6 +28,7 @@ import butterknife.OnClick;
 
 public class LoginActivity extends Activity implements LoginView {
 
+    private static final String TAG = "LoginActivity";
     private static final long LAYOUT_TRANSLATION_DURATION = 250;
     private static final int LAYOUT_TRANSLATION = 150;
 
@@ -42,6 +44,9 @@ public class LoginActivity extends Activity implements LoginView {
 
     @InjectView(R.id.activity_login_container_register)
     LinearLayout mRegisterContainer;
+
+    @InjectView(R.id.sign_in_button)
+    SignInButton mSignInButton;
 
     InlineInputFragment mInlineInputFragment;
 
@@ -121,6 +126,16 @@ public class LoginActivity extends Activity implements LoginView {
     }
 
     @Override
+    public void showGoogleSignIn() {
+        mSignInButton.animate().alpha(AnimationConstants.DEFAULT_VALUE);
+    }
+
+    @Override
+    public void hideGoogleSignIn() {
+        mSignInButton.animate().alpha(AnimationConstants.GONE);
+    }
+
+    @Override
     public void setRegisterContainerOffscreen() {
         mRegisterContainer.setY(mRootContainer.getHeight());
     }
@@ -186,12 +201,9 @@ public class LoginActivity extends Activity implements LoginView {
 
     @OnClick({R.id.btn_register, R.id.btn_sign_in})
     public void onRegisterOrSignInButtonClick(Button button) {
-        InlineInputPresenterImpl.FormType formType = isRegistrationForm(button) ? InlineInputPresenterImpl.FormType.REGISTRATION : InlineInputPresenterImpl.FormType.SIGN_IN;
+        InlineInputPresenterImpl.FormType formType = button.getText().toString().equals(getString(R.string.button_text_register)) ?
+                InlineInputPresenterImpl.FormType.REGISTRATION : InlineInputPresenterImpl.FormType.SIGN_IN;
         mInlineInputFragment.getPresenter().setFormType(formType);
         mPresenter.onInitialiseButtonSelected(button);
-    }
-
-    private boolean isRegistrationForm(Button button) {
-        return button.getText().toString().equals(getString(R.string.button_text_register));
     }
 }

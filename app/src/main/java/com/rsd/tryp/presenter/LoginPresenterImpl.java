@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Button;
 
 import com.rsd.tryp.R;
@@ -18,7 +19,8 @@ import com.rsd.tryp.view.LoginView;
  * Created by Raukawa on 6/28/2014.
  */
 public class LoginPresenterImpl implements LoginPresenter {
-    
+
+    private static final String TAG = "LoginPresenterImpl";
     private static final int INITIALISATION_DELAY = 1500;
 
     private Context mContext;
@@ -47,9 +49,16 @@ public class LoginPresenterImpl implements LoginPresenter {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mLoginView.translateTitle();
-                mLoginView.showRegisterContainer();
-            }
+            mLoginView.translateTitle();
+            mLoginView.showRegisterContainer();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLoginView.showGoogleSignIn();
+                    }
+                }, 200);
+                }
+
         }, INITIALISATION_DELAY);
     }
 
@@ -63,6 +72,7 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     @Override
     public void onInitialiseButtonSelected(Button button) {
+        mLoginView.hideGoogleSignIn();
         mLoginView.translateRegisterContainerOut(isSignInButtonSelected(button));
         mLoginView.translateInputContainerIn();
         mLoginView.setKeyboardShowingListener();
@@ -92,6 +102,7 @@ public class LoginPresenterImpl implements LoginPresenter {
     public void onInitialStateRequested() {
         mLoginView.removeKeyboardShowingListener();
         mLoginView.translateInputContainerOut();
+        mLoginView.hideGoogleSignIn();
         mLoginView.translateRegisterContainerIn();
     }
 

@@ -44,6 +44,14 @@ public class InlineInputFragment extends Fragment implements InlineInputView {
     RobotoTextView mFlowIndicatorLabel;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // We retain instance as on rotate our presenter can become stale
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inline_input, container, true);
         ButterKnife.inject(this, view);

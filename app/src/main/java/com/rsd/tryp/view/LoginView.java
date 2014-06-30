@@ -9,6 +9,8 @@ public interface LoginView {
     void blurBackground(BitmapDrawable drawable);
     void showTitle();
     void translateTitle();
+    void showGoogleSignIn();
+    void hideGoogleSignIn();
 
     void setRegisterContainerOffscreen();
     void translateRegisterContainerOut(boolean translateLeft);
