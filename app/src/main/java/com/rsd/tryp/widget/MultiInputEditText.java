@@ -27,7 +27,7 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
         SIGN_IN;
     }
 
-    private enum FormState {
+    public enum FormState {
         EMAIL,
         PASSWORD,
         PASSWORD_CONFIRMATION;
@@ -76,6 +76,8 @@ public class MultiInputEditText extends EditText implements View.OnTouchListener
             case MotionEvent.ACTION_DOWN:
                 if (withinDrawableBounds(motionEvent.getX())) {
                     validateInput();
+
+                    return true;
                 }
         }
 

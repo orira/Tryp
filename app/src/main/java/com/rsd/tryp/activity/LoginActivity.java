@@ -47,7 +47,7 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
     @InjectView(R.id.activity_login_container_register)
     LinearLayout mRegisterContainer;
 
-    @InjectView(R.id.activity_login_container_input)
+    /*@InjectView(R.id.activity_login_container_input)
     RelativeLayout mInputContainer;
 
     @InjectView(R.id.activity_login_label)
@@ -60,7 +60,7 @@ public class LoginActivity extends Activity implements LoginView, MultiInputForm
     RobotoTextView mLabelErrorMessage;
 
     @InjectView(R.id.activity_login_label_flow_indicator)
-    RobotoTextView mLabelFlowIndicator;
+    RobotoTextView mLabelFlowIndicator;*/
 
     /**
      * We need to animate the title and input container above the keyboard when showing, and return
