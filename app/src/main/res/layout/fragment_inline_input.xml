@@ -14,7 +14,7 @@
         android:layout_marginLeft="@dimen/padding_default_two_thirds"
         custom:typeface="THIN" />
 
-    <EditText
+    <com.rsd.tryp.widget.InlineInputEditText
         android:id="@+id/activity_login_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -20,7 +20,14 @@
         android:layout_centerInParent="true"
         custom:typeface="LIGHT" />
 
-    <RelativeLayout
+    <fragment
+        android:id="@+id/activity_login_input_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        class="com.rsd.tryp.fragment.InlineInputFragment" />
+
+    <!--<RelativeLayout
         android:id="@+id/activity_login_container_input"
         style="@style/ContainerInput"
         android:animateLayoutChanges="true">
@@ -34,7 +41,7 @@
             android:layout_marginLeft="@dimen/padding_default_two_thirds"
             custom:typeface="THIN" />
 
-        <com.rsd.tryp.widget.MultiInputEditText
+        <com.rsd.tryp.widget.InlineInputEditText
             android:id="@+id/activity_login_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,7 +69,7 @@
             android:layout_below="@id/activity_login_edit_text"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="@dimen/padding_default_half" />
-    </RelativeLayout>
+    </RelativeLayout>-->
 
     <LinearLayout
         android:id="@+id/activity_login_container_register"

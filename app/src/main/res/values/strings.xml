@@ -10,7 +10,6 @@
     <string name="hint_password_confirm">Confirm password</string>
 
     <string name="error_message_invalid_email">You have entered an invalid email address</string>
-    <string name="error_message_invalid_password_empty">Please enter a password</string>
     <string name="error_message_invalid_password_length">Your password needs to be at least 6 characters in length</string>
     <string name="error_message_invalid_password_confirm">Your password does not match the previously entered password</string>
 
