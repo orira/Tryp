@@ -76,7 +76,7 @@ public class InlineInputPresenterImpl implements InlineInputPresenter, InlineInp
             } else {
                 setTextValues(false);
                 renderViews(true);
-                mInlineInputView.setEditTextPasswordState(mEditTextPasswordState);
+                mInlineInputView.setEditTextInputMethod(mEditTextPasswordState);
             }
         } else {
             mInlineInputView.setErrorMessage(mErrorMessage);
@@ -107,7 +107,7 @@ public class InlineInputPresenterImpl implements InlineInputPresenter, InlineInp
         } else {
             setTextValues(true);
             renderViews(false);
-            mInlineInputView.setEditTextPasswordState(mEditTextPasswordState);
+            mInlineInputView.setEditTextInputMethod(mEditTextPasswordState);
         }
     }
 

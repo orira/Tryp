@@ -17,6 +17,7 @@ import com.rsd.tryp.presenter.InlineInputPresenterImpl;
 import com.rsd.tryp.presenter.LoginPresenter;
 import com.rsd.tryp.presenter.LoginPresenterImpl;
 import com.rsd.tryp.util.AnimationConstants;
+import com.rsd.tryp.util.KeyboardUtil;
 import com.rsd.tryp.util.OrientationUtil;
 import com.rsd.tryp.view.LoginView;
 import com.rsd.tryp.widget.RobotoTextView;
@@ -54,21 +55,13 @@ public class LoginActivity extends Activity implements LoginView {
     ViewTreeObserver.OnGlobalLayoutListener mKeyboardShowingListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
-            if (isKeyboardShowing()) {
+            if (KeyboardUtil.isKeyboardShowing(mRootContainer)) {
                 mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInlineInputFragmentHeight + mLayoutTranslation);
                 mInlineInputFragment.getView().animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(mLayoutTranslation);
             } else {
                 mTitle.animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(-mInlineInputFragmentHeight);
                 mInlineInputFragment.getView().animate().setDuration(LAYOUT_TRANSLATION_DURATION).translationY(AnimationConstants.DEFAULT_VALUE);
             }
-        }
-
-        private boolean isKeyboardShowing() {
-            Rect r = new Rect();
-            mRootContainer.getWindowVisibleDisplayFrame(r);
-            int heightDiff = mRootContainer.getRootView().getHeight() - (r.bottom - r.top);
-
-            return heightDiff > 100;
         }
     };
 
@@ -93,7 +86,7 @@ public class LoginActivity extends Activity implements LoginView {
             @Override
             public void onGlobalLayout() {
                 mPresenter = new LoginPresenterImpl(getApplicationContext(), LoginActivity.this);
-                ((InlineInputPresenter) mInlineInputFragment.getPresenter()).setLoginPresenter(mPresenter);
+                mInlineInputFragment.getPresenter().setLoginPresenter(mPresenter);
                 mRootContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                 // We cache this value as the height can change depending on error messages shown
@@ -196,7 +189,7 @@ public class LoginActivity extends Activity implements LoginView {
     @OnClick({R.id.btn_register, R.id.btn_sign_in})
     public void onRegisterOrSignInButtonClick(Button button) {
         InlineInputPresenterImpl.FormType formType = isRegistrationForm(button) ? InlineInputPresenterImpl.FormType.REGISTRATION : InlineInputPresenterImpl.FormType.SIGN_IN;
-        mInlineInputFragment.setFormType(formType);
+        mInlineInputFragment.getPresenter().setFormType(formType);
         mPresenter.onInitialiseButtonSelected(button);
     }
 

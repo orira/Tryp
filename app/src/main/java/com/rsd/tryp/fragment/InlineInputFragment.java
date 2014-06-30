@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.text.method.SingleLineTransformationMethod;
-import android.text.method.TransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,13 +35,13 @@ public class InlineInputFragment extends Fragment implements InlineInputView {
     RobotoTextView mLabel;
 
     @InjectView(R.id.activity_login_edit_text)
-    InlineInputEditText mInlineInputEditText;
+    InlineInputEditText mEditText;
 
     @InjectView(R.id.activity_login_label_error_message)
-    RobotoTextView mLabelErrorMessage;
+    RobotoTextView mErrorMessageLabel;
 
     @InjectView(R.id.activity_login_label_flow_indicator)
-    RobotoTextView mLabelFlowIndicator;
+    RobotoTextView mFlowIndicatorLabel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,12 +56,7 @@ public class InlineInputFragment extends Fragment implements InlineInputView {
         super.onStart();
 
         mPresenter = new InlineInputPresenterImpl(getActivity(), this);
-        mInlineInputEditText.setInlineInputForm((InlineInputForm) mPresenter);
-    }
-
-    @Override
-    public void setFormType(InlineInputPresenterImpl.FormType formType) {
-        mPresenter.setFormType(formType);
+        mEditText.setInlineInputForm((InlineInputForm) mPresenter);
     }
 
     @Override
@@ -72,7 +66,7 @@ public class InlineInputFragment extends Fragment implements InlineInputView {
 
     @Override
     public void setInitialFlowIndicator(String flowIndicatorText) {
-        mLabelFlowIndicator.setText(flowIndicatorText);
+        mFlowIndicatorLabel.setText(flowIndicatorText);
     }
 
     @Override
@@ -89,8 +83,8 @@ public class InlineInputFragment extends Fragment implements InlineInputView {
                         .translationY(AnimationConstants.DEFAULT_VALUE).withEndAction(new Runnable() {
                     @Override
                     public void run() {
-                        mInlineInputEditText.setText(input);
-                        mLabelFlowIndicator.setText(flowIndicatorText);
+                        mEditText.setText(input);
+                        mFlowIndicatorLabel.setText(flowIndicatorText);
                     }
                 });
             }
@@ -98,31 +92,31 @@ public class InlineInputFragment extends Fragment implements InlineInputView {
     }
 
     @Override
-    public void setEditTextPasswordState(boolean mEditTextPasswordState) {
-        if (mEditTextPasswordState) {
-            mInlineInputEditText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            mInlineInputEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+    public void setEditTextInputMethod(boolean passwordInput) {
+        if (passwordInput) {
+            mEditText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            mEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
         } else {
-            mInlineInputEditText.setInputType(InputType.TYPE_CLASS_TEXT);
-            mInlineInputEditText.setTransformationMethod(SingleLineTransformationMethod.getInstance());
+            mEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+            mEditText.setTransformationMethod(SingleLineTransformationMethod.getInstance());
         }
     }
 
     @Override
     public void setErrorMessage(String errorMessage) {
-        mLabelErrorMessage.setText(errorMessage);
-        mLabelErrorMessage.setVisibility(View.VISIBLE);
+        mErrorMessageLabel.setText(errorMessage);
+        mErrorMessageLabel.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void clearInput() {
-        mInlineInputEditText.setText(DEFAULT_TEXT);
+        mEditText.setText(DEFAULT_TEXT);
     }
 
     @Override
     public void clearErrorMessage() {
-        mLabelErrorMessage.setText(DEFAULT_TEXT);
-        mLabelErrorMessage.setVisibility(View.GONE);
+        mErrorMessageLabel.setText(DEFAULT_TEXT);
+        mErrorMessageLabel.setVisibility(View.GONE);
     }
 
     public InlineInputPresenter getPresenter() {
