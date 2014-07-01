@@ -1,6 +1,5 @@
 package com.rsd.tryp.module;
 
-import com.rsd.tryp.presenter.AbstractPresenter;
 import com.rsd.tryp.presenter.LoginPresenter;
 import com.rsd.tryp.presenter.LoginPresenterImpl;
 import com.rsd.tryp.service.AuthenticationService;
@@ -17,8 +16,7 @@ import dagger.Provides;
  * Created by wadereweti on 9/02/14.
  */
 @Module(
-    injects = AbstractPresenter.class,
-    library = true
+    injects = LoginPresenterImpl.class
 )
 public class AuthenticationServiceModule {
 

@@ -15,6 +15,6 @@ public class AuthenticationDaoStub implements AuthenticationDao {
 
     @Override
     public void authenticate(AuthenticationDto dto) {
-        
+
     }
 }

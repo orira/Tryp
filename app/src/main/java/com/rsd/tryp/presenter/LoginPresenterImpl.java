@@ -8,17 +8,22 @@ import android.os.Handler;
 import android.widget.Button;
 
 import com.rsd.tryp.R;
+import com.rsd.tryp.module.AuthenticationServiceModule;
 import com.rsd.tryp.service.AuthenticationService;
+import com.rsd.tryp.service.Service;
 import com.rsd.tryp.util.AnimationDuration;
 import com.rsd.tryp.util.BlurUtil;
 import com.rsd.tryp.view.LoginView;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+
+import dagger.ObjectGraph;
 
 /**
  * Created by Raukawa on 6/28/2014.
  */
-public class LoginPresenterImpl extends AbstractPresenter implements LoginPresenter {
+public class LoginPresenterImpl implements LoginPresenter {
 
     private static final String TAG = "LoginPresenterImpl";
     private static final int INITIALISATION_DELAY = 1500;
@@ -27,10 +32,11 @@ public class LoginPresenterImpl extends AbstractPresenter implements LoginPresen
     private LoginView mLoginView;
 
     @Inject
+    @Named(Service.AUTHENTICATION_IMPL)
     AuthenticationService mService;
 
     public LoginPresenterImpl(Context context, LoginView loginView) {
-        super();
+        ObjectGraph.create(new AuthenticationServiceModule()).inject(this);
 
         mContext = context;
         mLoginView = loginView;
