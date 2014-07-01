@@ -5,32 +5,35 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Button;
 
 import com.rsd.tryp.R;
+import com.rsd.tryp.service.AuthenticationService;
 import com.rsd.tryp.util.AnimationDuration;
-import com.rsd.tryp.service.LoginService;
-import com.rsd.tryp.service.LoginServiceImpl;
 import com.rsd.tryp.util.BlurUtil;
 import com.rsd.tryp.view.LoginView;
+
+import javax.inject.Inject;
 
 /**
  * Created by Raukawa on 6/28/2014.
  */
-public class LoginPresenterImpl implements LoginPresenter {
+public class LoginPresenterImpl extends AbstractPresenter implements LoginPresenter {
 
     private static final String TAG = "LoginPresenterImpl";
     private static final int INITIALISATION_DELAY = 1500;
 
     private Context mContext;
     private LoginView mLoginView;
-    private LoginService mService;
 
-    public LoginPresenterImpl(Context context, LoginView mLoginView) {
+    @Inject
+    AuthenticationService mService;
+
+    public LoginPresenterImpl(Context context, LoginView loginView) {
+        super();
+
         mContext = context;
-        this.mLoginView = mLoginView;
-        mService = new LoginServiceImpl(this);
+        mLoginView = loginView;
         mLoginView.setRegisterContainerOffscreen();
         mLoginView.setInputContainerOffscreen();
 
