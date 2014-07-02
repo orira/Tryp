@@ -1,5 +1,6 @@
 package com.rsd.tryp.dao;
 
+import com.rsd.tryp.bus.BusProvider;
 import com.rsd.tryp.dto.AuthenticationDto;
 import com.rsd.tryp.exception.LoginException;
 import com.rsd.tryp.exception.RegistrationException;
