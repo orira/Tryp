@@ -13,7 +13,6 @@ public abstract class AbstractService {
     private ObjectGraph mServiceObjectGraph;
 
     public AbstractService() {
-        mServiceObjectGraph = TrypApplication.getInstance().getApplicationObjectGraph();
         mServiceObjectGraph = TrypApplication.getInstance().createScopedGraph(getModules().toArray());
         mServiceObjectGraph.inject(this);
     }

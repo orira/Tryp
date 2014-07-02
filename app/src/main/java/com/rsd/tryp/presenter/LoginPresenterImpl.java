@@ -1,6 +1,7 @@
 package com.rsd.tryp.presenter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -40,6 +41,9 @@ public class LoginPresenterImpl extends AbstractPresenter implements LoginPresen
 
     @Inject @ForApplication
     TrypApplication mContext;
+
+    @Inject
+    Resources mResources;
 
     @Inject @Named(Service.AUTHENTICATION_IMPL)
     AuthenticationService mService;
@@ -88,9 +92,9 @@ public class LoginPresenterImpl extends AbstractPresenter implements LoginPresen
 
     @Override
     public void setBlurredBackground() {
-        Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.img_login);
+        Bitmap bitmap = BitmapFactory.decodeResource(mResources, R.drawable.img_login);
         Bitmap blurredBitmap = BlurUtil.blurBitmap(bitmap, mContext);
-        final BitmapDrawable drawable = new BitmapDrawable(mContext.getResources(), blurredBitmap);
+        final BitmapDrawable drawable = new BitmapDrawable(mResources, blurredBitmap);
         mLoginView.blurBackground(drawable);
     }
 
@@ -137,6 +141,6 @@ public class LoginPresenterImpl extends AbstractPresenter implements LoginPresen
     }
 
     private boolean isSignInButtonSelected(Button button) {
-        return button.getText().toString().equals(button.getResources().getString(R.string.button_text_sign_in));
+        return button.getText().toString().equals(mResources.getString(R.string.button_text_sign_in));
     }
 }

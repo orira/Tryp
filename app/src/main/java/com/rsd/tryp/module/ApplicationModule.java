@@ -1,5 +1,7 @@
 package com.rsd.tryp.module;
 
+import android.content.res.Resources;
+
 import com.rsd.tryp.TrypApplication;
 import com.rsd.tryp.module.annotation.ForApplication;
 import com.rsd.tryp.presenter.LoginPresenterImpl;
@@ -30,5 +32,10 @@ public class ApplicationModule {
     @Provides @ForApplication
     public TrypApplication provideApplication() {
         return mApplication;
+    }
+
+    @Provides
+    public Resources provideResources() {
+        return mApplication.getResources();
     }
 }
