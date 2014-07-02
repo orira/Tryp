@@ -12,12 +12,16 @@ import com.rsd.tryp.TrypApplication;
 import com.rsd.tryp.activity.LoginActivity;
 import com.rsd.tryp.module.ApplicationModule;
 import com.rsd.tryp.module.AuthenticationServiceModule;
+import com.rsd.tryp.module.LoginModule;
 import com.rsd.tryp.module.annotation.ForApplication;
 import com.rsd.tryp.service.AuthenticationService;
 import com.rsd.tryp.service.Service;
 import com.rsd.tryp.util.AnimationDuration;
 import com.rsd.tryp.util.BlurUtil;
 import com.rsd.tryp.view.LoginView;
+
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,7 +31,7 @@ import dagger.ObjectGraph;
 /**
  * Created by Raukawa on 6/28/2014.
  */
-public class LoginPresenterImpl implements LoginPresenter {
+public class LoginPresenterImpl extends AbstractPresenter implements LoginPresenter {
 
     private static final String TAG = "LoginPresenterImpl";
     private static final int INITIALISATION_DELAY = 1500;
@@ -41,8 +45,13 @@ public class LoginPresenterImpl implements LoginPresenter {
     AuthenticationService mService;
 
     public LoginPresenterImpl(LoginView loginView) {
+        super();
         mLoginView = loginView;
-        TrypApplication.getInstance().getApplicationObjectGraph().plus(new AuthenticationServiceModule()).inject(this);
+    }
+
+    @Override
+    protected List<Object> getModules() {
+        return Arrays.<Object>asList(new AuthenticationServiceModule());
     }
 
     public void init() {

@@ -5,10 +5,14 @@ import com.rsd.tryp.dao.LoginDao;
 import com.rsd.tryp.dao.RegistrationDao;
 import com.rsd.tryp.dto.AuthenticationDto;
 import com.rsd.tryp.module.AuthenticationServiceModule;
+import com.rsd.tryp.presenter.AbstractPresenter;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 
 import org.apache.http.HttpStatus;
+
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -21,7 +25,7 @@ import retrofit.client.Response;
 /**
  * Created by wadereweti on 2/07/14.
  */
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class AuthenticationServiceImpl extends AbstractService implements AuthenticationService {
 
     @Inject
     RestAdapter mRestAdapter;
@@ -29,8 +33,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Inject
     Bus mBus;
 
-    public AuthenticationServiceImpl() {
-        TrypApplication.getInstance().getApplicationObjectGraph().inject(this);
+    @Override
+    protected List<Object> getModules() {
+        return Arrays.<Object>asList();
     }
 
     @Produce
