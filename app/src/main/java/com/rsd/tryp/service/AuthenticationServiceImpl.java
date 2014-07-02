@@ -1,30 +1,78 @@
 package com.rsd.tryp.service;
 
-import com.rsd.tryp.dao.AuthenticationDao;
-import com.rsd.tryp.dao.Dao;
+import com.rsd.tryp.dao.LoginDao;
+import com.rsd.tryp.dao.RegistrationDao;
 import com.rsd.tryp.dto.AuthenticationDto;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Produce;
+
+import org.apache.http.HttpStatus;
 
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
- * Created by wadereweti on 9/02/14.
+ * Created by wadereweti on 2/07/14.
  */
-@Singleton
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    @Inject
-    @Named(Dao.AUTHENTICATION_STUB)
-    AuthenticationDao dao;
+    RestAdapter mRestAdapter;
+    Bus mBus;
 
-    @Override
-    public void authenticateCredentials(String username, String password) {
-        dao.authenticate(new AuthenticationDto(username, password));
+    public AuthenticationServiceImpl(RestAdapter restAdapter, Bus bus) {
+        mRestAdapter = restAdapter;
+        mBus = bus;
+    }
+
+    @Produce
+    public boolean produceAuthenticateEvent(int httpStatus) {
+        return httpStatus == HttpStatus.SC_OK;
+    }
+
+    @Produce
+    public boolean produceRegistrationEvent(int httpStatus) {
+        return httpStatus == HttpStatus.SC_OK;
     }
 
     @Override
-    public void registerCredentials(String username, String password) {
-        dao.register(new AuthenticationDto(username, password));
+    public void registerUser(AuthenticationDto dto) {
+        RegistrationDao dao = mRestAdapter.create(RegistrationDao.class);
+        Callback<Void> callback = new Callback<Void>(){
+
+            @Override
+            public void failure(RetrofitError error) {
+                mBus.post(error.getResponse().getStatus());
+            }
+
+            @Override
+            public void success(Void voidResponse, Response response) {
+                mBus.post(produceRegistrationEvent(response.getStatus()));
+            }
+        };
+
+        dao.register(dto, callback);
+    }
+
+    @Override
+    public void authenticateUser(AuthenticationDto dto) {
+        LoginDao dao = mRestAdapter.create(LoginDao.class);
+        Callback<Void> callback = new Callback<Void>(){
+
+            @Override
+            public void failure(RetrofitError error) {
+                mBus.post(produceAuthenticateEvent(error.getResponse().getStatus()));
+            }
+
+            @Override
+            public void success(Void voidResponse, Response response) {
+                mBus.post(produceAuthenticateEvent(response.getStatus()));
+            }
+        };
+
+        dao.login(dto, callback);
     }
 }

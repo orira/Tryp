@@ -8,7 +8,8 @@ import android.os.Handler;
 import android.widget.Button;
 
 import com.rsd.tryp.R;
-import com.rsd.tryp.module.AuthenticationServiceModule;
+import com.rsd.tryp.TrypApplication;
+import com.rsd.tryp.module.ApplicationModule;
 import com.rsd.tryp.service.AuthenticationService;
 import com.rsd.tryp.service.Service;
 import com.rsd.tryp.util.AnimationDuration;
@@ -28,18 +29,18 @@ public class LoginPresenterImpl implements LoginPresenter {
     private static final String TAG = "LoginPresenterImpl";
     private static final int INITIALISATION_DELAY = 1500;
 
-    private Context mContext;
     private LoginView mLoginView;
 
-    @Inject
-    @Named(Service.AUTHENTICATION_IMPL)
+    TrypApplication mContext;
+
     AuthenticationService mService;
 
-    public LoginPresenterImpl(Context context, LoginView loginView) {
-        ObjectGraph.create(new AuthenticationServiceModule()).inject(this);
-
-        mContext = context;
+    public LoginPresenterImpl(TrypApplication application, LoginView loginView) {
+        mContext = application;
         mLoginView = loginView;
+    }
+
+    public void init() {
         mLoginView.setRegisterContainerOffscreen();
         mLoginView.setInputContainerOffscreen();
 

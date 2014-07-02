@@ -13,6 +13,6 @@ import retrofit.http.POST;
  */
 public interface RegistrationDao {
 
-    @POST("/register")
+    @POST("/registerUser")
     HttpStatus register(@Body AuthenticationDto user, Callback<Void> callback);
 }

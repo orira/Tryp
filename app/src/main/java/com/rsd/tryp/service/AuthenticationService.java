@@ -1,9 +1,12 @@
 package com.rsd.tryp.service;
 
+import com.rsd.tryp.dto.AuthenticationDto;
+import com.rsd.tryp.exception.NetworkException;
+
 /**
- * Created by wadereweti on 9/02/14.
+ * Created by wadereweti on 2/07/14.
  */
 public interface AuthenticationService {
-    public void authenticateCredentials(String username, String password);
-    public void registerCredentials(String username, String password);
+    void registerUser(AuthenticationDto dto);
+    void authenticateUser(AuthenticationDto dto);
 }

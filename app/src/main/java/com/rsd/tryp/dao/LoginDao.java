@@ -13,6 +13,6 @@ import retrofit.http.POST;
  */
 public interface LoginDao {
 
-    @POST("/authenticate")
+    @POST("/authenticateUser")
     void login(@Body AuthenticationDto user, Callback<Void> callback);
 }

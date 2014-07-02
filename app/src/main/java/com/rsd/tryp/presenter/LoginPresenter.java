@@ -6,6 +6,7 @@ import android.widget.Button;
  * Created by Raukawa on 6/28/2014.
  */
 public interface LoginPresenter {
+    void init();
     void setBlurredBackground();
     void onInitialiseButtonSelected(Button button);
     void submitCredentials(String email, String password);
@@ -13,4 +14,5 @@ public interface LoginPresenter {
     void onSuccess();
     void onFailure();
     void onInitialStateRequested();
+
 }

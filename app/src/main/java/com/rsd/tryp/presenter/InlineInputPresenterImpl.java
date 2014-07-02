@@ -43,6 +43,7 @@ public class InlineInputPresenterImpl implements InlineInputPresenter, InlineInp
     private String mErrorMessage;
 
     public InlineInputPresenterImpl(Context context, InlineInputView inlineInputView) {
+        super();
         mResources = context.getResources();
         mInlineInputView = inlineInputView;
         mFormState = FormState.EMAIL;

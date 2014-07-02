@@ -1,6 +1,7 @@
 package com.rsd.tryp.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.ViewTreeObserver;
@@ -9,8 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.common.SignInButton;
+import com.google.common.eventbus.Subscribe;
 import com.rsd.tryp.R;
+import com.rsd.tryp.TrypApplication;
 import com.rsd.tryp.fragment.InlineInputFragment;
+import com.rsd.tryp.module.annotation.LoginModule;
 import com.rsd.tryp.presenter.InlineInputPresenterImpl;
 import com.rsd.tryp.presenter.LoginPresenter;
 import com.rsd.tryp.presenter.LoginPresenterImpl;
@@ -21,20 +25,27 @@ import com.rsd.tryp.util.OrientationUtil;
 import com.rsd.tryp.view.LoginView;
 import com.rsd.tryp.widget.RobotoTextView;
 
+import java.util.Arrays;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
 
-public class LoginActivity extends Activity implements LoginView {
+public class LoginActivity extends AbstractActivity implements LoginView {
 
     private static final String TAG = "LoginActivity";
     private static final long LAYOUT_TRANSLATION_DURATION = 250;
     private static final int LAYOUT_TRANSLATION = 150;
 
-    private LoginPresenter mPresenter;
     private int mLayoutTranslation;
     private int mInlineInputFragmentHeight;
+
+    @Inject
+    LoginPresenter mPresenter;
 
     @InjectView(R.id.activity_login_container_root)
     RelativeLayout mRootContainer;
@@ -72,6 +83,7 @@ public class LoginActivity extends Activity implements LoginView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         ButterKnife.inject(this);
 
         mInlineInputFragment = (InlineInputFragment) getFragmentManager().findFragmentById(R.id.activity_login_input_fragment);
@@ -88,7 +100,8 @@ public class LoginActivity extends Activity implements LoginView {
         mRootContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                mPresenter = new LoginPresenterImpl(getApplicationContext(), LoginActivity.this);
+                //mPresenter = new LoginPresenterImpl(LoginActivity.this);
+                mPresenter.init();
                 mInlineInputFragment.getPresenter().setLoginPresenter(mPresenter);
                 mRootContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
@@ -97,6 +110,11 @@ public class LoginActivity extends Activity implements LoginView {
                 mInlineInputFragmentHeight = mInlineInputFragment.getView().getHeight();
             }
         });
+    }
+
+    @Override
+    protected List<Object> getModules() {
+        return Arrays.<Object>asList(new LoginModule(this));
     }
 
     @Override
@@ -205,5 +223,14 @@ public class LoginActivity extends Activity implements LoginView {
                 InlineInputPresenterImpl.FormType.REGISTRATION : InlineInputPresenterImpl.FormType.SIGN_IN;
         mInlineInputFragment.getPresenter().setFormType(formType);
         mPresenter.onInitialiseButtonSelected(button);
+    }
+
+    @Subscribe
+    public void onAuthenticateEvent(boolean success) {
+
+    }
+
+    @Subscribe void onRegistrationEvent(boolean success) {
+
     }
 }
