@@ -24,8 +24,7 @@ import dagger.Provides;
     injects = {
             LoginActivity.class
     },
-    addsTo = ApplicationModule.class,
-    includes = AuthenticationServiceModule.class
+    addsTo = ApplicationModule.class
 )
 public class LoginModule {
     private LoginView mLoginView;
