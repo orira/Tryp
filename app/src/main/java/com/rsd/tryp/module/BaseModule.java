@@ -11,6 +11,7 @@ import dagger.Module;
         ApplicationModule.class,
         AuthenticationServiceModule.class,
         BusModule.class,
+        LoginModule.class,
         RestAdapterModule.class
     }
 )

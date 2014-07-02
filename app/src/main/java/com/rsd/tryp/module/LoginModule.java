@@ -1,4 +1,4 @@
-package com.rsd.tryp.module.annotation;
+package com.rsd.tryp.module;
 
 import android.content.Context;
 
@@ -21,7 +21,10 @@ import dagger.Provides;
  */
 
 @Module(
-    injects = LoginActivity.class,
+    injects = {
+            LoginActivity.class
+    },
+    addsTo = ApplicationModule.class,
     includes = AuthenticationServiceModule.class
 )
 public class LoginModule {
@@ -37,7 +40,7 @@ public class LoginModule {
     }
 
     @Provides @Singleton
-    public LoginPresenter providePresenter(TrypApplication application, LoginView loginView) {
-        return new LoginPresenterImpl(application, loginView);
+    public LoginPresenter providePresenter(LoginView loginView) {
+        return new LoginPresenterImpl(loginView);
     }
 }

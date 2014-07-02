@@ -1,7 +1,5 @@
 package com.rsd.tryp.activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.ViewTreeObserver;
@@ -12,12 +10,10 @@ import android.widget.RelativeLayout;
 import com.google.android.gms.common.SignInButton;
 import com.google.common.eventbus.Subscribe;
 import com.rsd.tryp.R;
-import com.rsd.tryp.TrypApplication;
 import com.rsd.tryp.fragment.InlineInputFragment;
-import com.rsd.tryp.module.annotation.LoginModule;
+import com.rsd.tryp.module.LoginModule;
 import com.rsd.tryp.presenter.InlineInputPresenterImpl;
 import com.rsd.tryp.presenter.LoginPresenter;
-import com.rsd.tryp.presenter.LoginPresenterImpl;
 import com.rsd.tryp.util.AnimationConstants;
 import com.rsd.tryp.util.AnimationDuration;
 import com.rsd.tryp.util.KeyboardUtil;

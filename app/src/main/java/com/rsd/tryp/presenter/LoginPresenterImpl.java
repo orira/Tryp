@@ -9,7 +9,10 @@ import android.widget.Button;
 
 import com.rsd.tryp.R;
 import com.rsd.tryp.TrypApplication;
+import com.rsd.tryp.activity.LoginActivity;
 import com.rsd.tryp.module.ApplicationModule;
+import com.rsd.tryp.module.AuthenticationServiceModule;
+import com.rsd.tryp.module.annotation.ForApplication;
 import com.rsd.tryp.service.AuthenticationService;
 import com.rsd.tryp.service.Service;
 import com.rsd.tryp.util.AnimationDuration;
@@ -31,13 +34,17 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     private LoginView mLoginView;
 
+    @Inject @ForApplication
     TrypApplication mContext;
 
+    @Inject @Named(Service.AUTHENTICATION_IMPL)
     AuthenticationService mService;
 
-    public LoginPresenterImpl(TrypApplication application, LoginView loginView) {
-        mContext = application;
+    public LoginPresenterImpl(LoginView loginView) {
         mLoginView = loginView;
+        ObjectGraph objectGraph = ((TrypApplication) ((LoginActivity) mLoginView).getApplication()).getApplicationObjectGraph();
+        objectGraph.plus(new AuthenticationServiceModule());
+        objectGraph.inject(this);
     }
 
     public void init() {

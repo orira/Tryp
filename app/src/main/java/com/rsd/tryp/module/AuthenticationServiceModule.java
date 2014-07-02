@@ -1,6 +1,5 @@
 package com.rsd.tryp.module;
 
-import com.rsd.tryp.module.annotation.LoginModule;
 import com.rsd.tryp.presenter.LoginPresenterImpl;
 import com.rsd.tryp.service.AuthenticationService;
 import com.rsd.tryp.service.AuthenticationServiceImpl;
@@ -18,6 +17,9 @@ import retrofit.RestAdapter;
  * Created by wadereweti on 9/02/14.
  */
 @Module(
+    injects = {
+            AuthenticationServiceImpl.class
+    },
     includes = {
         RestAdapterModule.class,
         BusModule.class
@@ -30,7 +32,7 @@ public class AuthenticationServiceModule {
     @Singleton
     @Provides
     @Named(Service.AUTHENTICATION_IMPL)
-    AuthenticationService provideAuthenticationServiceImpl(RestAdapter restAdapter, Bus bus) {
-        return new AuthenticationServiceImpl(restAdapter, bus);
+    AuthenticationService provideAuthenticationServiceImpl() {
+        return new AuthenticationServiceImpl();
     }
 }

@@ -3,6 +3,7 @@ package com.rsd.tryp.service;
 import com.rsd.tryp.dao.LoginDao;
 import com.rsd.tryp.dao.RegistrationDao;
 import com.rsd.tryp.dto.AuthenticationDto;
+import com.rsd.tryp.module.AuthenticationServiceModule;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 
@@ -10,6 +11,7 @@ import org.apache.http.HttpStatus;
 
 import javax.inject.Inject;
 
+import dagger.ObjectGraph;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -20,12 +22,15 @@ import retrofit.client.Response;
  */
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+    @Inject
     RestAdapter mRestAdapter;
+
+    @Inject
     Bus mBus;
 
-    public AuthenticationServiceImpl(RestAdapter restAdapter, Bus bus) {
-        mRestAdapter = restAdapter;
-        mBus = bus;
+    public AuthenticationServiceImpl() {
+//        ObjectGraph objectGraph = ObjectGraph.create(new AuthenticationServiceModule());
+//        objectGraph.inject(this);
     }
 
     @Produce

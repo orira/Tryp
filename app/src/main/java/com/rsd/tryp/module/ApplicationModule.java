@@ -1,7 +1,8 @@
 package com.rsd.tryp.module;
 
 import com.rsd.tryp.TrypApplication;
-import com.rsd.tryp.module.annotation.LoginModule;
+import com.rsd.tryp.module.annotation.ForApplication;
+import com.rsd.tryp.presenter.LoginPresenterImpl;
 
 import dagger.Module;
 import dagger.Provides;
@@ -12,10 +13,11 @@ import dagger.Provides;
 
 @Module (
     injects = {
-        TrypApplication.class
+        TrypApplication.class,
+        LoginPresenterImpl.class
     },
     includes = {
-        LoginModule.class
+        AuthenticationServiceModule.class
     }
 )
 public class ApplicationModule {
@@ -25,7 +27,7 @@ public class ApplicationModule {
         mApplication = application;
     }
 
-    @Provides
+    @Provides @ForApplication
     public TrypApplication provideApplication() {
         return mApplication;
     }

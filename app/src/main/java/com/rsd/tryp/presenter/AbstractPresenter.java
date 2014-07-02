@@ -1,9 +1,12 @@
 package com.rsd.tryp.presenter;
 
 import com.rsd.tryp.TrypApplication;
+import com.rsd.tryp.module.annotation.ForApplication;
 
 import java.util.Arrays;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 
@@ -13,8 +16,11 @@ import dagger.ObjectGraph;
 public class AbstractPresenter {
     private ObjectGraph mObjectGraph;
 
-    public AbstractPresenter(TrypApplication trypApplication) {
-        mObjectGraph = trypApplication.getApplicationObjectGraph();
+    //@Inject @ForApplication
+    TrypApplication mTrypApplication;
+
+    public AbstractPresenter() {
+        mObjectGraph = mTrypApplication.getApplicationObjectGraph();
         mObjectGraph.inject(this);
     }
 
