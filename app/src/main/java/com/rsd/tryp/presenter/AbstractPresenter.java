@@ -13,18 +13,13 @@ import dagger.ObjectGraph;
 /**
  * Created by Raukawa on 7/2/2014.
  */
-public class AbstractPresenter {
-    private ObjectGraph mObjectGraph;
-
-    //@Inject @ForApplication
-    TrypApplication mTrypApplication;
+public abstract class AbstractPresenter {
+    private ObjectGraph mPresenterObjectGraph;
 
     public AbstractPresenter() {
-        mObjectGraph = mTrypApplication.getApplicationObjectGraph();
-        mObjectGraph.inject(this);
+        mPresenterObjectGraph = TrypApplication.getInstance().createScopedGraph(getModules().toArray());
+        mPresenterObjectGraph.inject(this);
     }
 
-    /*protected List<Object> getModules() {
-        return Arrays.<Object>asList(new ActivityModule(this));
-    }*/
+    protected abstract List<Object> getModules();
 }

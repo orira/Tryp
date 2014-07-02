@@ -16,6 +16,16 @@ public class TrypApplication extends Application {
 
     private ObjectGraph mApplicationObjectGraph;
 
+    private static TrypApplication mTrypApplication;
+
+    public TrypApplication() {
+        mTrypApplication = this;
+    }
+
+    public static TrypApplication getInstance() {
+        return mTrypApplication;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

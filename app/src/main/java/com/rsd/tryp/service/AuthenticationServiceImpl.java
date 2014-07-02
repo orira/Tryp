@@ -1,5 +1,6 @@
 package com.rsd.tryp.service;
 
+import com.rsd.tryp.TrypApplication;
 import com.rsd.tryp.dao.LoginDao;
 import com.rsd.tryp.dao.RegistrationDao;
 import com.rsd.tryp.dto.AuthenticationDto;
@@ -29,8 +30,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     Bus mBus;
 
     public AuthenticationServiceImpl() {
-//        ObjectGraph objectGraph = ObjectGraph.create(new AuthenticationServiceModule());
-//        objectGraph.inject(this);
+        TrypApplication.getInstance().getApplicationObjectGraph().inject(this);
     }
 
     @Produce

@@ -42,9 +42,7 @@ public class LoginPresenterImpl implements LoginPresenter {
 
     public LoginPresenterImpl(LoginView loginView) {
         mLoginView = loginView;
-        ObjectGraph objectGraph = ((TrypApplication) ((LoginActivity) mLoginView).getApplication()).getApplicationObjectGraph();
-        objectGraph.plus(new AuthenticationServiceModule());
-        objectGraph.inject(this);
+        TrypApplication.getInstance().getApplicationObjectGraph().plus(new AuthenticationServiceModule()).inject(this);
     }
 
     public void init() {
