@@ -20,6 +20,9 @@ import com.rsd.tryp.widget.InlineInputEditText;
 import com.rsd.tryp.widget.InlineInputForm;
 import com.rsd.tryp.widget.RobotoTextView;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -52,7 +55,7 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
         super.onCreate(savedInstanceState);
 
         // We retain instance as on rotate our presenter can become stale
-        setRetainInstance(true);
+        //setRetainInstance(true);
     }
 
     @Override
@@ -63,19 +66,8 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
         return view;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getObjectGraph().create(new InlineInputModule(this));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        //mPresenter = new InlineInputPresenterImpl(getActivity(), this);
-        //mPresenter = new InlineInputPresenterImpl(this);
-        mEditText.setInlineInputForm((InlineInputForm) mPresenter);
+    protected List<Object> getModules() {
+        return Arrays.<Object>asList(new InlineInputModule(this));
     }
 
     @Override

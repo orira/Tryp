@@ -127,7 +127,6 @@ public class LoginActivity extends AbstractActivity implements LoginView {
 
     @Override
     protected List<Object> getModules() {
-        //return Arrays.<Object>asList(new LoginModule(this), new InlineInputModule(mInlineInputFragment));
         return Arrays.<Object>asList(new LoginModule(this));
     }
 

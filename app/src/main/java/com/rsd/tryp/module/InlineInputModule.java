@@ -1,5 +1,7 @@
 package com.rsd.tryp.module;
 
+import com.rsd.tryp.activity.LoginActivity;
+import com.rsd.tryp.fragment.AbstractFragment;
 import com.rsd.tryp.fragment.InlineInputFragment;
 import com.rsd.tryp.presenter.InlineInputPresenter;
 import com.rsd.tryp.presenter.InlineInputPresenterImpl;
@@ -15,15 +17,16 @@ import dagger.Provides;
  */
 
 @Module(
-    injects = InlineInputFragment.class,
-    addsTo = LoginModule.class,
+    injects = {
+        InlineInputFragment.class,
+    },
     library = true
 )
 public class InlineInputModule {
     private InlineInputView mView;
 
-    public InlineInputModule(InlineInputView mView) {
-        mView = mView;
+    public InlineInputModule(InlineInputView view) {
+        mView = view;
     }
 
     @Provides

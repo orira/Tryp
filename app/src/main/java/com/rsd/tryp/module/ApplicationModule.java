@@ -18,7 +18,7 @@ import dagger.Provides;
     injects = {
         TrypApplication.class,
         LoginPresenterImpl.class,
-        InlineInputPresenterImpl.class
+        InlineInputPresenterImpl.class,
     },
     includes = {
         AuthenticationServiceModule.class

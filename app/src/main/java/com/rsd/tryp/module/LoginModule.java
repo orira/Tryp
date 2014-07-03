@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.rsd.tryp.TrypApplication;
 import com.rsd.tryp.activity.LoginActivity;
+import com.rsd.tryp.fragment.AbstractFragment;
+import com.rsd.tryp.fragment.InlineInputFragment;
 import com.rsd.tryp.module.ApplicationModule;
 import com.rsd.tryp.module.AuthenticationServiceModule;
 import com.rsd.tryp.presenter.LoginPresenter;
@@ -22,9 +24,8 @@ import dagger.Provides;
 
 @Module(
     injects = {
-            LoginActivity.class
-    },
-    addsTo = ApplicationModule.class
+        LoginActivity.class
+    }
 )
 public class LoginModule {
     private LoginView mLoginView;

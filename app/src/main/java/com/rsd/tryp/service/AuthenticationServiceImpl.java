@@ -33,11 +33,6 @@ public class AuthenticationServiceImpl extends AbstractService implements Authen
     @Inject
     Bus mBus;
 
-    @Override
-    protected List<Object> getModules() {
-        return Arrays.<Object>asList();
-    }
-
     @Produce
     public boolean produceAuthenticateEvent(int httpStatus) {
         return httpStatus == HttpStatus.SC_OK;

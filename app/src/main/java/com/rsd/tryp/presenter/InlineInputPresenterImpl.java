@@ -48,12 +48,6 @@ public class InlineInputPresenterImpl extends AbstractPresenter implements Inlin
     private String mFlowIndicatorText;
     private String mErrorMessage;
 
-    /*public InlineInputPresenterImpl(Context context, InlineInputView inlineInputView) {
-        super();
-        mInlineInputView = inlineInputView;
-        mFormState = FormState.EMAIL;
-    }*/
-
     public InlineInputPresenterImpl(InlineInputView view) {
         super();
         mInlineInputView = view;
