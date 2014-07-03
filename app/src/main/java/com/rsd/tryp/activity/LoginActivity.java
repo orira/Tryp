@@ -81,7 +81,6 @@ public class LoginActivity extends AbstractActivity implements LoginView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         ButterKnife.inject(this);
 
         mInlineInputFragment = (InlineInputFragment) getFragmentManager().findFragmentById(R.id.activity_login_input_fragment);
