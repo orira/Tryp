@@ -13,7 +13,7 @@ import dagger.ObjectGraph;
 /**
  * Created by Raukawa on 7/2/2014.
  */
-public abstract class AbstractPresenter {
+public class AbstractPresenter {
     private ObjectGraph mPresenterObjectGraph;
 
     public AbstractPresenter() {
@@ -21,5 +21,7 @@ public abstract class AbstractPresenter {
         mPresenterObjectGraph.inject(this);
     }
 
-    protected abstract List<Object> getModules();
+    protected List<Object> getModules() {
+        return Arrays.<Object>asList();
+    };
 }

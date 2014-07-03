@@ -2,6 +2,7 @@ package com.rsd.tryp.activity;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -11,6 +12,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.common.eventbus.Subscribe;
 import com.rsd.tryp.R;
 import com.rsd.tryp.fragment.InlineInputFragment;
+import com.rsd.tryp.module.InlineInputModule;
 import com.rsd.tryp.module.LoginModule;
 import com.rsd.tryp.presenter.InlineInputPresenterImpl;
 import com.rsd.tryp.presenter.LoginPresenter;
@@ -109,8 +111,9 @@ public class LoginActivity extends AbstractActivity implements LoginView {
     }
 
     @Override
-    protected List<Object> getModules() {
-        return Arrays.<Object>asList(new LoginModule(this));
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        mActivityObjectGraph.create(new InlineInputModule(mInlineInputFragment));
     }
 
     @Override
@@ -120,6 +123,12 @@ public class LoginActivity extends AbstractActivity implements LoginView {
         }
 
         mInlineInputFragment.getPresenter().onPreviousStateSelected();
+    }
+
+    @Override
+    protected List<Object> getModules() {
+        //return Arrays.<Object>asList(new LoginModule(this), new InlineInputModule(mInlineInputFragment));
+        return Arrays.<Object>asList(new LoginModule(this));
     }
 
     // LoginView Methods

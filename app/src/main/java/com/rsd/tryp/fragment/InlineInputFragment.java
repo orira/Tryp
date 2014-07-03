@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.rsd.tryp.R;
+import com.rsd.tryp.module.InlineInputModule;
 import com.rsd.tryp.util.AnimationDuration;
 import com.rsd.tryp.presenter.InlineInputPresenter;
 import com.rsd.tryp.presenter.InlineInputPresenterImpl;
@@ -19,17 +20,20 @@ import com.rsd.tryp.widget.InlineInputEditText;
 import com.rsd.tryp.widget.InlineInputForm;
 import com.rsd.tryp.widget.RobotoTextView;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
  * Created by wadereweti on 30/06/14.
  */
-public class InlineInputFragment extends Fragment implements InlineInputView {
+public class InlineInputFragment extends AbstractFragment implements InlineInputView {
 
     private static final String DEFAULT_TEXT = "";
 
-    private InlineInputPresenter mPresenter;
+    @Inject
+    InlineInputPresenter mPresenter;
 
     @InjectView(R.id.activity_login_label)
     RobotoTextView mLabel;
@@ -60,10 +64,17 @@ public class InlineInputFragment extends Fragment implements InlineInputView {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getObjectGraph().create(new InlineInputModule(this));
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
-        mPresenter = new InlineInputPresenterImpl(getActivity(), this);
+        //mPresenter = new InlineInputPresenterImpl(getActivity(), this);
+        //mPresenter = new InlineInputPresenterImpl(this);
         mEditText.setInlineInputForm((InlineInputForm) mPresenter);
     }
 

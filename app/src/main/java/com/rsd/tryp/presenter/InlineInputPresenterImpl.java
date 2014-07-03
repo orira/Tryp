@@ -3,15 +3,18 @@ package com.rsd.tryp.presenter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.rsd.tryp.R;
 import com.rsd.tryp.view.InlineInputView;
 import com.rsd.tryp.widget.InlineInputForm;
 
+import javax.inject.Inject;
+
 /**
  * Created by wadereweti on 30/06/14.
  */
-public class InlineInputPresenterImpl implements InlineInputPresenter, InlineInputForm {
+public class InlineInputPresenterImpl extends AbstractPresenter implements InlineInputPresenter, InlineInputForm {
 
     public enum FormType {
         REGISTRATION,
@@ -24,10 +27,13 @@ public class InlineInputPresenterImpl implements InlineInputPresenter, InlineInp
         PASSWORD_CONFIRMATION
     }
 
+    private static final String TAG = "InlineInputPresenterImpl";
     private static final int VALID_PASSWORD_LENGTH = 6;
 
-    private final Resources mResources;
-    private final InlineInputView mInlineInputView;
+    @Inject
+    Resources mResources;
+
+    private InlineInputView mInlineInputView;
 
     private LoginPresenter mLoginPresenter;
     private FormType mFormType;
@@ -42,11 +48,15 @@ public class InlineInputPresenterImpl implements InlineInputPresenter, InlineInp
     private String mFlowIndicatorText;
     private String mErrorMessage;
 
-    public InlineInputPresenterImpl(Context context, InlineInputView inlineInputView) {
+    /*public InlineInputPresenterImpl(Context context, InlineInputView inlineInputView) {
         super();
-        mResources = context.getResources();
         mInlineInputView = inlineInputView;
         mFormState = FormState.EMAIL;
+    }*/
+
+    public InlineInputPresenterImpl(InlineInputView view) {
+        super();
+        mInlineInputView = view;
     }
 
     private void initialiseView() {

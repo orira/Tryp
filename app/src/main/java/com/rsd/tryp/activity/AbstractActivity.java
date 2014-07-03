@@ -21,7 +21,7 @@ import dagger.ObjectGraph;
  */
 public abstract class AbstractActivity extends FragmentActivity {
 
-    private ObjectGraph mActivityObjectGraph;
+    protected ObjectGraph mActivityObjectGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,4 +39,12 @@ public abstract class AbstractActivity extends FragmentActivity {
     }
 
     protected abstract List<Object> getModules();
+
+    public void inject(Object object) {
+        mActivityObjectGraph.inject(object);
+    }
+
+    public ObjectGraph getObjectGraph() {
+        return mActivityObjectGraph;
+    }
 }

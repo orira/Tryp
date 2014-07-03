@@ -4,6 +4,7 @@ import android.content.res.Resources;
 
 import com.rsd.tryp.TrypApplication;
 import com.rsd.tryp.module.annotation.ForApplication;
+import com.rsd.tryp.presenter.InlineInputPresenterImpl;
 import com.rsd.tryp.presenter.LoginPresenterImpl;
 
 import dagger.Module;
@@ -16,7 +17,8 @@ import dagger.Provides;
 @Module (
     injects = {
         TrypApplication.class,
-        LoginPresenterImpl.class
+        LoginPresenterImpl.class,
+        InlineInputPresenterImpl.class
     },
     includes = {
         AuthenticationServiceModule.class
