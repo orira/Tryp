@@ -3,6 +3,9 @@ package com.rsd.tryp.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 
+import com.rsd.tryp.TrypApplication;
+import com.rsd.tryp.activity.AbstractActivity;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,25 +18,15 @@ public class AbstractFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //  ObjectGraph objectGraph = ((AbstractActivity) getActivity()).getObjectGraph();
-        //  ObjectGraph objectGraph = TrypApplication.getInstance().getApplicationObjectGraph();
-        //  objectGraph.plus(getModules().toArray());
-
-        //ObjectGraph objectGraph = ObjectGraph.create(getModules());
-        ObjectGraph objectGraph = ObjectGraph.create(getModule());
+        ObjectGraph objectGraph = TrypApplication.getInstance().createScopedGraph(getModules().toArray());
         objectGraph.inject(this);
-
         init();
-    }
-
-    protected void init() {
     }
 
     protected List<Object> getModules() {
         return Arrays.<Object>asList();
     }
 
-    protected Object getModule() {
-        return new Object();
+    protected void init() {
     }
 }

@@ -29,9 +29,7 @@ import retrofit.RestAdapter;
 )
 public class AuthenticationServiceModule {
 
-    @Singleton
-    @Provides
-    @Named(Service.AUTHENTICATION_IMPL)
+    @Singleton @Provides @Named(Service.AUTHENTICATION_IMPL)
     AuthenticationService provideAuthenticationServiceImpl() {
         return new AuthenticationServiceImpl();
     }

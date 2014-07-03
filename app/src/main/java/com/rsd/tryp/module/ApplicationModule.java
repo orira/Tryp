@@ -25,8 +25,7 @@ import dagger.Provides;
     },
     includes = {
         AuthenticationServiceModule.class
-    },
-    library = true
+    }
 )
 public class ApplicationModule {
     private TrypApplication mApplication;
@@ -43,10 +42,5 @@ public class ApplicationModule {
     @Provides @Singleton
     public Resources provideResources() {
         return mApplication.getResources();
-    }
-
-    @Provides @Singleton
-    public LayoutInflater provideLayoutInflater() {
-        return LayoutInflater.from(mApplication);
     }
 }

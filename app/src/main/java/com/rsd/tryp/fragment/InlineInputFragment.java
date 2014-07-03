@@ -68,10 +68,6 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
         return Arrays.<Object>asList(new InlineInputModule(this));
     }
 
-    protected Object getModule() {
-        return new InlineInputModule(this);
-    }
-
     protected void init() {
         mEditText.setInlineInputForm((InlineInputForm) mPresenter);
     }
