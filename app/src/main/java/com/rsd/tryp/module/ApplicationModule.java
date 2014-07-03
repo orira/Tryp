@@ -1,11 +1,14 @@
 package com.rsd.tryp.module;
 
 import android.content.res.Resources;
+import android.view.LayoutInflater;
 
 import com.rsd.tryp.TrypApplication;
 import com.rsd.tryp.module.annotation.ForApplication;
 import com.rsd.tryp.presenter.InlineInputPresenterImpl;
 import com.rsd.tryp.presenter.LoginPresenterImpl;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -22,7 +25,8 @@ import dagger.Provides;
     },
     includes = {
         AuthenticationServiceModule.class
-    }
+    },
+    library = true
 )
 public class ApplicationModule {
     private TrypApplication mApplication;
@@ -36,8 +40,13 @@ public class ApplicationModule {
         return mApplication;
     }
 
-    @Provides
+    @Provides @Singleton
     public Resources provideResources() {
         return mApplication.getResources();
+    }
+
+    @Provides @Singleton
+    public LayoutInflater provideLayoutInflater() {
+        return LayoutInflater.from(mApplication);
     }
 }

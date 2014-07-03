@@ -51,6 +51,7 @@ public class InlineInputPresenterImpl extends AbstractPresenter implements Inlin
     public InlineInputPresenterImpl(InlineInputView view) {
         super();
         mInlineInputView = view;
+        mFormState = FormState.EMAIL;
     }
 
     private void initialiseView() {

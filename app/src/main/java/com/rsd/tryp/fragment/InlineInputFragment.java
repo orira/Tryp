@@ -1,6 +1,5 @@
 package com.rsd.tryp.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
@@ -11,10 +10,9 @@ import android.view.ViewGroup;
 
 import com.rsd.tryp.R;
 import com.rsd.tryp.module.InlineInputModule;
-import com.rsd.tryp.util.AnimationDuration;
 import com.rsd.tryp.presenter.InlineInputPresenter;
-import com.rsd.tryp.presenter.InlineInputPresenterImpl;
 import com.rsd.tryp.util.AnimationConstants;
+import com.rsd.tryp.util.AnimationDuration;
 import com.rsd.tryp.view.InlineInputView;
 import com.rsd.tryp.widget.InlineInputEditText;
 import com.rsd.tryp.widget.InlineInputForm;
@@ -55,7 +53,7 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
         super.onCreate(savedInstanceState);
 
         // We retain instance as on rotate our presenter can become stale
-        //setRetainInstance(true);
+        setRetainInstance(true);
     }
 
     @Override
@@ -68,6 +66,14 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
 
     protected List<Object> getModules() {
         return Arrays.<Object>asList(new InlineInputModule(this));
+    }
+
+    protected Object getModule() {
+        return new InlineInputModule(this);
+    }
+
+    protected void init() {
+        mEditText.setInlineInputForm((InlineInputForm) mPresenter);
     }
 
     @Override
