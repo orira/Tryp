@@ -2,12 +2,6 @@ package com.rsd.tryp.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
-
-import com.rsd.tryp.TrypApplication;
-import com.rsd.tryp.activity.AbstractActivity;
-import com.rsd.tryp.module.InlineInputModule;
-import com.rsd.tryp.view.InlineInputView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,11 +19,21 @@ public class AbstractFragment extends Fragment {
         //  ObjectGraph objectGraph = TrypApplication.getInstance().getApplicationObjectGraph();
         //  objectGraph.plus(getModules().toArray());
 
-        ObjectGraph objectGraph = ObjectGraph.create(new InlineInputModule((InlineInputView) this));
+        //ObjectGraph objectGraph = ObjectGraph.create(getModules());
+        ObjectGraph objectGraph = ObjectGraph.create(getModule());
         objectGraph.inject(this);
+
+        init();
     }
 
-    protected List<Object> getModules() {
+    protected void init() {
+    }
+
+    /*protected List<Object> getModules() {
         return Arrays.<Object>asList();
+    }*/
+
+    protected Object getModule() {
+        return new Object();
     }
 }
