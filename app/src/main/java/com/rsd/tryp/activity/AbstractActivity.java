@@ -32,12 +32,4 @@ public abstract class AbstractActivity extends FragmentActivity {
     }
 
     protected abstract List<Object> getModules();
-
-    public void inject(Object object) {
-        mActivityObjectGraph.inject(object);
-    }
-
-    public ObjectGraph getObjectGraph() {
-        return mActivityObjectGraph;
-    }
 }
