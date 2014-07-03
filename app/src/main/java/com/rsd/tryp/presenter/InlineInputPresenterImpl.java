@@ -1,9 +1,7 @@
 package com.rsd.tryp.presenter;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.rsd.tryp.R;
 import com.rsd.tryp.view.InlineInputView;

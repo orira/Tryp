@@ -1,6 +1,5 @@
 package com.rsd.tryp.presenter;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,10 +9,7 @@ import android.widget.Button;
 
 import com.rsd.tryp.R;
 import com.rsd.tryp.TrypApplication;
-import com.rsd.tryp.activity.LoginActivity;
-import com.rsd.tryp.module.ApplicationModule;
 import com.rsd.tryp.module.AuthenticationServiceModule;
-import com.rsd.tryp.module.LoginModule;
 import com.rsd.tryp.module.annotation.ForApplication;
 import com.rsd.tryp.service.AuthenticationService;
 import com.rsd.tryp.service.Service;
@@ -26,8 +22,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import dagger.ObjectGraph;
 
 /**
  * Created by Raukawa on 6/28/2014.

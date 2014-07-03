@@ -8,6 +8,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
+import com.rsd.tryp.module.InlineInputModule;
+
+import javax.inject.Inject;
+
+import dagger.ObjectGraph;
+
 /**
  * Created by Raukawa on 6/28/2014.
  */

@@ -29,9 +29,9 @@ public class AbstractFragment extends Fragment {
     protected void init() {
     }
 
-    /*protected List<Object> getModules() {
+    protected List<Object> getModules() {
         return Arrays.<Object>asList();
-    }*/
+    }
 
     protected Object getModule() {
         return new Object();

@@ -1,7 +1,5 @@
 package com.rsd.tryp.presenter;
 
-import com.rsd.tryp.widget.InlineInputEditText;
-
 /**
  * Created by wadereweti on 30/06/14.
  */

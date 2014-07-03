@@ -6,6 +6,8 @@ import com.rsd.tryp.fragment.InlineInputFragment;
 import com.rsd.tryp.presenter.InlineInputPresenter;
 import com.rsd.tryp.presenter.InlineInputPresenterImpl;
 import com.rsd.tryp.view.InlineInputView;
+import com.rsd.tryp.widget.InlineInputEditText;
+import com.rsd.tryp.widget.InlineInputForm;
 
 import javax.inject.Singleton;
 
@@ -19,8 +21,7 @@ import dagger.Provides;
 @Module(
     injects = {
         InlineInputFragment.class,
-    },
-    library = true
+    }
 )
 public class InlineInputModule {
     private InlineInputView mView;

@@ -1,12 +1,9 @@
 package com.rsd.tryp.presenter;
 
 import com.rsd.tryp.TrypApplication;
-import com.rsd.tryp.module.annotation.ForApplication;
 
 import java.util.Arrays;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 
