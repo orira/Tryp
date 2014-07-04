@@ -15,6 +15,7 @@ import com.rsd.tryp.service.AuthenticationService;
 import com.rsd.tryp.service.Service;
 import com.rsd.tryp.util.AnimationDuration;
 import com.rsd.tryp.util.BlurUtil;
+import com.rsd.tryp.util.OrientationUtil;
 import com.rsd.tryp.view.LoginView;
 
 import java.util.Arrays;
@@ -126,12 +127,14 @@ public class LoginPresenterImpl extends AbstractPresenter implements LoginPresen
         mLoginView.translateInputContainerOut();
         mLoginView.translateRegisterContainerIn();
 
+        long startDelay = OrientationUtil.isLandscape(mContext) ? AnimationDuration.LONG : AnimationDuration.FAST;
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 mLoginView.showGoogleSignIn();
             }
-        }, AnimationDuration.FAST);
+        }, startDelay);
     }
 
     private boolean isSignInButtonSelected(Button button) {

@@ -228,13 +228,4 @@ public class LoginActivity extends AbstractActivity implements LoginView {
         mInlineInputFragment.getPresenter().setFormType(formType);
         mPresenter.onInitialiseButtonSelected(button);
     }
-
-    @Subscribe
-    public void onAuthenticateEvent(boolean success) {
-
-    }
-
-    @Subscribe void onRegistrationEvent(boolean success) {
-
-    }
 }

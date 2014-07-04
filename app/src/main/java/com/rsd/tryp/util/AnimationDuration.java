@@ -7,5 +7,6 @@ public class AnimationDuration {
     public static final long FAST = 75;
     public static final long SHORT = 150;
     public static final long STANDARD = 300;
-    public static final long LONG = 600;
+    public static final long LONG = 450;
+    public static final long SLOW = 600;
 }

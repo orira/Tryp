@@ -15,12 +15,20 @@ import dagger.ObjectGraph;
  * Created by wadereweti on 3/07/14.
  */
 public class AbstractFragment extends Fragment {
+    ObjectGraph mFragmentObjectGraph;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ObjectGraph objectGraph = TrypApplication.getInstance().createScopedGraph(getModules().toArray());
-        objectGraph.inject(this);
+        mFragmentObjectGraph = TrypApplication.getInstance().createScopedGraph(getModules().toArray());
+        mFragmentObjectGraph.inject(this);
         init();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mFragmentObjectGraph = null;
     }
 
     protected List<Object> getModules() {
