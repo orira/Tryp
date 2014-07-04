@@ -23,4 +23,6 @@
     <string name="button_text_sign_in">Sign in</string>
     <string name="button_text_register">Register</string>
 
+    <string name="authentication_failed">Authentication Failed</string>
+
 </resources>

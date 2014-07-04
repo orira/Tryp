@@ -43,11 +43,16 @@
         android:layout_alignParentRight="true"
         android:layout_marginLeft="@dimen/padding_default_half" />
 
-    <ProgressBar
-        style="@android:style/Widget.Holo.ProgressBar"
-        android:id="@+id/fragment_inline_input_progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.dd.CircularProgressButton
+        android:id="@+id/fragment_inline_input_circular_button"
+        android:layout_width="196dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         android:visibility="gone"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        custom:cornerRadius="48dp"
+        custom:textError="@string/authentication_failed"
+        custom:iconComplete="@drawable/ic_action_accept" />
 </RelativeLayout>

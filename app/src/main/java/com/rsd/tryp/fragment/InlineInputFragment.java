@@ -1,5 +1,6 @@
 package com.rsd.tryp.fragment;
 
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
@@ -7,9 +8,10 @@ import android.text.method.SingleLineTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
 
+import com.dd.CircularProgressButton;
 import com.rsd.tryp.R;
 import com.rsd.tryp.module.InlineInputModule;
 import com.rsd.tryp.presenter.InlineInputPresenter;
@@ -47,7 +49,7 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
 
     @InjectView(R.id.fragment_inline_input_flow_indicator) RobotoTextView mFlowIndicator;
 
-    @InjectView(R.id.fragment_inline_input_progress_bar) ProgressBar mProgressBar;
+    @InjectView(R.id.fragment_inline_input_circular_button) CircularProgressButton mCircularButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,13 +159,37 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
         mRootContainer.animate().setDuration(AnimationDuration.SHORT).scaleY(AnimationConstants.DEFAULT_VALUE).withEndAction(new Runnable() {
             @Override
             public void run() {
-                mEditText.setFocusable(true);
-                /*mLabel.animate().alpha(AnimationConstants.DEFAULT_VALUE);
-                mEditText.animate().alpha(AnimationConstants.DEFAULT_VALUE);
-                mFlowIndicator.animate().alpha(AnimationConstants.DEFAULT_VALUE);*/
-                mProgressBar.setAlpha(AnimationConstants.GONE);
-                mProgressBar.setVisibility(View.VISIBLE);
-                mProgressBar.animate().alpha(AnimationConstants.DEFAULT_VALUE);
+                //mCircularButton.setProgress(1);
+                mCircularButton.setAlpha(AnimationConstants.GONE);
+                mCircularButton.setVisibility(View.VISIBLE);
+                mCircularButton.animate().alpha(AnimationConstants.DEFAULT_VALUE).withStartAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCircularButton.setIndeterminateProgressMode(true);
+                        mCircularButton.setProgress(50);
+                    }
+                });
+
+                /*ValueAnimator widthAnimation = ValueAnimator.ofInt(1, 100);
+                widthAnimation.setDuration(5000);
+                widthAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+                widthAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        if (mCircularButton.getVisibility() == View.GONE) {
+                            mCircularButton.setVisibility(View.VISIBLE);
+                        }
+
+                        Integer value = (Integer) animation.getAnimatedValue();
+                        mCircularButton.setProgress(value);
+                    }
+                });
+                widthAnimation.start();*/
+                /*//mEditText.setFocusable(true);
+                mCircularButton.setProgress(50);
+                //mCircularButton.setAlpha(AnimationConstants.GONE);
+                mCircularButton.setVisibility(View.VISIBLE);
+                mCircularButton.animate().alpha(AnimationConstants.DEFAULT_VALUE);*/
                 mPresenter.onLoadingShowing();
             }
         });
