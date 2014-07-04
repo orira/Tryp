@@ -7,6 +7,7 @@ import android.text.method.SingleLineTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.rsd.tryp.R;
@@ -34,23 +35,19 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
 
     private static final String DEFAULT_TEXT = "";
 
-    @Inject
-    InlineInputPresenter mPresenter;
+    @Inject InlineInputPresenter mPresenter;
 
-    @InjectView(R.id.fragment_login_container_input)
-    RelativeLayout mRootContainer;
+    @InjectView(R.id.fragment_login_container_input) RelativeLayout mRootContainer;
 
-    @InjectView(R.id.activity_login_label)
-    RobotoTextView mLabel;
+    @InjectView(R.id.fragment_inline_input_label) RobotoTextView mLabel;
 
-    @InjectView(R.id.activity_login_edit_text)
-    InlineInputEditText mEditText;
+    @InjectView(R.id.fragment_inline_input_edit_text) InlineInputEditText mEditText;
 
-    @InjectView(R.id.activity_login_label_error_message)
-    RobotoTextView mErrorMessageLabel;
+    @InjectView(R.id.fragment_inline_input_label_error_message) RobotoTextView mErrorMessage;
 
-    @InjectView(R.id.activity_login_label_flow_indicator)
-    RobotoTextView mFlowIndicatorLabel;
+    @InjectView(R.id.fragment_inline_input_flow_indicator) RobotoTextView mFlowIndicator;
+
+    @InjectView(R.id.fragment_inline_input_progress_bar) ProgressBar mProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +80,7 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
 
     @Override
     public void setInitialFlowIndicator(String flowIndicatorText) {
-        mFlowIndicatorLabel.setText(flowIndicatorText);
+        mFlowIndicator.setText(flowIndicatorText);
     }
 
     @Override
@@ -101,7 +98,7 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
                     @Override
                     public void run() {
                         mEditText.setText(input);
-                        mFlowIndicatorLabel.setText(flowIndicatorText);
+                        mFlowIndicator.setText(flowIndicatorText);
                     }
                 });
             }
@@ -121,8 +118,8 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
 
     @Override
     public void setErrorMessage(String errorMessage) {
-        mErrorMessageLabel.setText(errorMessage);
-        mErrorMessageLabel.setVisibility(View.VISIBLE);
+        mErrorMessage.setText(errorMessage);
+        mErrorMessage.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -132,15 +129,22 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
 
     @Override
     public void clearErrorMessage() {
-        mErrorMessageLabel.setText(DEFAULT_TEXT);
-        mErrorMessageLabel.setVisibility(View.GONE);
+        mErrorMessage.setText(DEFAULT_TEXT);
+        mErrorMessage.setVisibility(View.GONE);
     }
 
     @Override
     public void prepareForLoading() {
         mRootContainer.setPivotY(mRootContainer.getHeight() / 2);
-        mRootContainer.animate().alpha(AnimationConstants.GONE);
-        mRootContainer.animate().setDuration(2000).scaleY(AnimationConstants.GONE).withEndAction(new Runnable() {
+        mRootContainer.animate().setDuration(AnimationDuration.SHORT).scaleY(AnimationConstants.GONE).withStartAction(new Runnable() {
+            @Override
+            public void run() {
+                mEditText.setFocusable(false);
+                mLabel.animate().alpha(AnimationConstants.GONE);
+                mEditText.animate().alpha(AnimationConstants.GONE);
+                mFlowIndicator.animate().alpha(AnimationConstants.GONE);
+            }
+        }).withEndAction(new Runnable() {
             @Override
             public void run() {
                 mPresenter.onPrepareForLoadingComplete();
@@ -150,10 +154,16 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
 
     @Override
     public void displayLoading() {
-        mRootContainer.animate().alpha(AnimationConstants.DEFAULT_VALUE);
-        mRootContainer.animate().setDuration(2000).scaleY(AnimationConstants.DEFAULT_VALUE).withEndAction(new Runnable() {
+        mRootContainer.animate().setDuration(AnimationDuration.SHORT).scaleY(AnimationConstants.DEFAULT_VALUE).withEndAction(new Runnable() {
             @Override
             public void run() {
+                mEditText.setFocusable(true);
+                /*mLabel.animate().alpha(AnimationConstants.DEFAULT_VALUE);
+                mEditText.animate().alpha(AnimationConstants.DEFAULT_VALUE);
+                mFlowIndicator.animate().alpha(AnimationConstants.DEFAULT_VALUE);*/
+                mProgressBar.setAlpha(AnimationConstants.GONE);
+                mProgressBar.setVisibility(View.VISIBLE);
+                mProgressBar.animate().alpha(AnimationConstants.DEFAULT_VALUE);
                 mPresenter.onLoadingShowing();
             }
         });

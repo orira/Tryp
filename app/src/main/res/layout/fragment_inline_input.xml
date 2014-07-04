@@ -6,7 +6,7 @@
     android:animateLayoutChanges="true">
 
     <com.rsd.tryp.widget.RobotoTextView
-        android:id="@+id/activity_login_label"
+        android:id="@+id/fragment_inline_input_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/primary"
@@ -15,13 +15,13 @@
         custom:typeface="THIN" />
 
     <com.rsd.tryp.widget.InlineInputEditText
-        android:id="@+id/activity_login_edit_text"
+        android:id="@+id/fragment_inline_input_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_login_label" />
+        android:layout_below="@id/fragment_inline_input_label" />
 
     <com.rsd.tryp.widget.RobotoTextView
-        android:id="@+id/activity_login_label_error_message"
+        android:id="@+id/fragment_inline_input_label_error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_small"
@@ -29,17 +29,25 @@
         android:visibility="gone"
         android:layout_marginLeft="@dimen/padding_default_two_thirds"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/activity_login_edit_text"
-        android:layout_toLeftOf="@+id/activity_login_label_flow_indicator" />
+        android:layout_below="@id/fragment_inline_input_edit_text"
+        android:layout_toLeftOf="@+id/fragment_inline_input_flow_indicator" />
 
     <com.rsd.tryp.widget.RobotoTextView
-        android:id="@id/activity_login_label_flow_indicator"
+        android:id="@id/fragment_inline_input_flow_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_small"
         android:textColor="@android:color/secondary_text_light"
         android:layout_marginRight="@dimen/padding_default_two_thirds"
-        android:layout_below="@id/activity_login_edit_text"
+        android:layout_below="@id/fragment_inline_input_edit_text"
         android:layout_alignParentRight="true"
         android:layout_marginLeft="@dimen/padding_default_half" />
+
+    <ProgressBar
+        style="@android:style/Widget.Holo.ProgressBar"
+        android:id="@+id/fragment_inline_input_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerInParent="true" />
 </RelativeLayout>

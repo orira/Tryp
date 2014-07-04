@@ -82,7 +82,7 @@ public class InlineInputPresenterImpl extends AbstractPresenter implements Inlin
 
     @Override
     public void onPreviousStateSelected() {
-        boolean defaultState = decrementFormState();
+        boolean defaultState = decrementFormStateAndCheckIfNowDefaultState();
 
         if (defaultState) {
             mInlineInputView.clearErrorMessage();
@@ -135,7 +135,7 @@ public class InlineInputPresenterImpl extends AbstractPresenter implements Inlin
         return inputComplete;
     }
 
-    private boolean decrementFormState() {
+    private boolean decrementFormStateAndCheckIfNowDefaultState() {
         boolean defaultState = false;
 
         switch (mFormState) {
