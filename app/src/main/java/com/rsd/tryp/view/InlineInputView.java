@@ -14,4 +14,6 @@ public interface InlineInputView {
     void setErrorMessage(String errorMessage);
     void clearInput();
     void clearErrorMessage();
+    void prepareForLoading();
+    void displayLoading();
 }

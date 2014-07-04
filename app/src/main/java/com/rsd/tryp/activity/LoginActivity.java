@@ -148,7 +148,8 @@ public class LoginActivity extends AbstractActivity implements LoginView {
 
     @Override
     public void showGoogleSignIn() {
-        mSignInButton.animate().alpha(AnimationConstants.DEFAULT_VALUE);
+        long startDelay = OrientationUtil.isLandscape(this) ? 300 : 0;
+        mSignInButton.animate().setStartDelay(startDelay).alpha(AnimationConstants.DEFAULT_VALUE);
     }
 
     @Override

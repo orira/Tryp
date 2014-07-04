@@ -7,5 +7,6 @@ public interface InlineInputPresenter {
     void setLoginPresenter(LoginPresenter mPresenter);
     void setFormType(InlineInputPresenterImpl.FormType formType);
     void onPreviousStateSelected();
-
+    void onPrepareForLoadingComplete();
+    void onLoadingShowing();
 }

@@ -7,6 +7,7 @@ import android.text.method.SingleLineTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.rsd.tryp.R;
 import com.rsd.tryp.module.InlineInputModule;
@@ -35,6 +36,9 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
 
     @Inject
     InlineInputPresenter mPresenter;
+
+    @InjectView(R.id.fragment_login_container_input)
+    RelativeLayout mRootContainer;
 
     @InjectView(R.id.activity_login_label)
     RobotoTextView mLabel;
@@ -130,6 +134,29 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
     public void clearErrorMessage() {
         mErrorMessageLabel.setText(DEFAULT_TEXT);
         mErrorMessageLabel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void prepareForLoading() {
+        mRootContainer.setPivotY(mRootContainer.getHeight() / 2);
+        mRootContainer.animate().alpha(AnimationConstants.GONE);
+        mRootContainer.animate().setDuration(2000).scaleY(AnimationConstants.GONE).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                mPresenter.onPrepareForLoadingComplete();
+            }
+        });
+    }
+
+    @Override
+    public void displayLoading() {
+        mRootContainer.animate().alpha(AnimationConstants.DEFAULT_VALUE);
+        mRootContainer.animate().setDuration(2000).scaleY(AnimationConstants.DEFAULT_VALUE).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                mPresenter.onLoadingShowing();
+            }
+        });
     }
 
     public InlineInputPresenter getPresenter() {

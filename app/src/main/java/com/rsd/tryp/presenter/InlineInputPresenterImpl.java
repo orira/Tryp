@@ -245,11 +245,23 @@ public class InlineInputPresenterImpl extends AbstractPresenter implements Inlin
     }
 
     private void provideCredentials() {
+        mInlineInputView.prepareForLoading();
+
         if (isRegistrationFlow()) {
             mLoginPresenter.registerCredentials(mEmail, mPassword);
         } else {
             mLoginPresenter.submitCredentials(mEmail, mPassword);
         }
+    }
+
+    @Override
+    public void onPrepareForLoadingComplete() {
+        mInlineInputView.displayLoading();
+    }
+
+    @Override
+    public void onLoadingShowing() {
+
     }
 
     private boolean isRegistrationFlow() {
