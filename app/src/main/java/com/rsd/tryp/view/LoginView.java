@@ -28,4 +28,5 @@ public interface LoginView {
     void removeKeyboardShowingListener();
 
 
+    void displayLoading();
 }

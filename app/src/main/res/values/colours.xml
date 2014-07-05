@@ -5,4 +5,7 @@
 
     <color name="translucent_white">#ccffffff</color>
 
+    <!-- 50% opacity -->
+    <color name="translucent_black">#7f000000</color>
+
 </resources>

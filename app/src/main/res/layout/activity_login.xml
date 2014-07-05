@@ -3,65 +3,97 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".LoginActivity"
-    style="@style/StandardPaddingRootContainer"
     android:id="@+id/activity_login_container_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/img_login">
 
-    <com.rsd.tryp.widget.RobotoTextView
-        android:id="@+id/activity_login_title"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        style="@style/StandardPaddingRootContainer"
+        android:id="@+id/activity_login_overlay"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textSize="@dimen/text_xxxlarge"
-        android:textColor="@color/primary_accent"
-        android:gravity="center"
-        android:scaleX="0"
-        android:scaleY="0"
-        android:layout_centerInParent="true"
-        custom:typeface="LIGHT" />
+        android:background="@color/translucent_black">
 
-    <fragment
-        android:id="@+id/activity_login_input_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        class="com.rsd.tryp.fragment.InlineInputFragment" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/activity_login_input_fragment"
-        android:alpha="0" />
-
-    <LinearLayout
-        android:id="@+id/activity_login_container_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <com.rsd.tryp.widget.RobotoButton
-            android:id="@+id/btn_sign_in"
-            android:layout_width="0dp"
+        <ProgressBar
+            style="@android:style/Widget.Holo.ProgressBar"
+            android:id="@+id/activity_login_progress_bar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/btn_background_primary"
+            android:layout_centerInParent="true" />
+
+        <com.rsd.tryp.widget.RobotoTextView
+            android:id="@+id/activity_login_loading_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:text="@string/button_text_sign_in"
-            android:layout_marginRight="@dimen/padding_default"
+            android:textSize="@dimen/text_large"
+            android:layout_below="@id/activity_login_progress_bar"
             custom:typeface="REGULAR" />
+    </RelativeLayout>
 
-        <com.rsd.tryp.widget.RobotoButton
-            android:id="@+id/btn_register"
-            android:layout_width="0dp"
+
+    <RelativeLayout
+        style="@style/StandardPaddingRootContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.rsd.tryp.widget.RobotoTextView
+            android:id="@+id/activity_login_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/btn_background_secondary"
+            android:text="@string/app_name"
+            android:textSize="@dimen/text_xxxlarge"
             android:textColor="@color/primary_accent"
-            android:text="@string/button_text_register"
-            custom:typeface="THIN" />
-    </LinearLayout>
+            android:gravity="center"
+            android:scaleX="0"
+            android:scaleY="0"
+            android:layout_centerInParent="true"
+            custom:typeface="LIGHT" />
 
+        <fragment
+            android:id="@+id/activity_login_input_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            class="com.rsd.tryp.fragment.InlineInputFragment"
+            tools:layout="@layout/fragment_inline_input" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/activity_login_input_fragment"
+            android:alpha="0" />
+
+        <LinearLayout
+            android:id="@+id/activity_login_container_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.rsd.tryp.widget.RobotoButton
+                android:id="@+id/btn_sign_in"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/btn_background_primary"
+                android:textColor="@android:color/white"
+                android:text="@string/button_text_sign_in"
+                android:layout_marginRight="@dimen/padding_default"
+                custom:typeface="REGULAR" />
+
+            <com.rsd.tryp.widget.RobotoButton
+                android:id="@+id/btn_register"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/btn_background_secondary"
+                android:textColor="@color/primary_accent"
+                android:text="@string/button_text_register"
+                custom:typeface="THIN" />
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

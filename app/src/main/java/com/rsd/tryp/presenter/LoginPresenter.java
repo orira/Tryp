@@ -15,4 +15,5 @@ public interface LoginPresenter {
     void onFailure();
     void onInitialStateRequested();
 
+    void displayLoading();
 }

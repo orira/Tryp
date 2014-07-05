@@ -159,7 +159,6 @@ public class InlineInputFragment extends AbstractFragment implements InlineInput
         mRootContainer.animate().setDuration(AnimationDuration.SHORT).scaleY(AnimationConstants.DEFAULT_VALUE).withEndAction(new Runnable() {
             @Override
             public void run() {
-                //mCircularButton.setProgress(1);
                 mCircularButton.setAlpha(AnimationConstants.GONE);
                 mCircularButton.setVisibility(View.VISIBLE);
                 mCircularButton.animate().alpha(AnimationConstants.DEFAULT_VALUE).withStartAction(new Runnable() {

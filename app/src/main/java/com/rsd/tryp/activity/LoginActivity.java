@@ -3,13 +3,16 @@ package com.rsd.tryp.activity;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroupOverlay;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.common.SignInButton;
-import com.google.common.eventbus.Subscribe;
 import com.rsd.tryp.R;
 import com.rsd.tryp.fragment.InlineInputFragment;
 import com.rsd.tryp.module.InlineInputModule;
@@ -42,6 +45,8 @@ public class LoginActivity extends AbstractActivity implements LoginView {
     private int mLayoutTranslation;
     private int mInlineInputFragmentHeight;
 
+    InlineInputFragment mInlineInputFragment;
+
     @Inject
     LoginPresenter mPresenter;
 
@@ -57,7 +62,7 @@ public class LoginActivity extends AbstractActivity implements LoginView {
     @InjectView(R.id.sign_in_button)
     SignInButton mSignInButton;
 
-    InlineInputFragment mInlineInputFragment;
+
 
     /**
      * We need to animate the title and input container above the keyboard when showing, and return
@@ -209,6 +214,32 @@ public class LoginActivity extends AbstractActivity implements LoginView {
     @Override
     public void removeKeyboardShowingListener() {
         mRootContainer.getViewTreeObserver().removeOnGlobalLayoutListener(mKeyboardShowingListener);
+    }
+
+    @Override
+    public void displayLoading() {
+
+        mTranslucentOverlay.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mTranslucentOverlay.bringToFront();
+        mProgressBar.bringToFront();
+
+        mTranslucentOverlay.animate().alpha(AnimationConstants.DEFAULT_VALUE);
+        mProgressBar.animate().alpha(AnimationConstants.DEFAULT_VALUE);
+
+        /*ViewGroupOverlay overlay = mRootContainer.getOverlay();
+        overlay.add(mTranslucentOverlay);
+        overlay.add(mProgressBar);*/
+        /*mRootContainer.addView(view);
+        mProgressBar.setVisibility(View.VISIBLE);*/
+
+        /*mProgressBar.setAlpha(AnimationConstants.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        final ViewGroupOverlay overlay = mRootContainer.getOverlay();
+        //overlay.add(new ProgressBar(this, null, android.R.attr.progressBarStyle));
+        overlay.add(view);*/
+
+        /*mProgressBar.animate().alpha(AnimationConstants.DEFAULT_VALUE);*/
     }
 
     @Override

@@ -256,7 +256,8 @@ public class InlineInputPresenterImpl extends AbstractPresenter implements Inlin
 
     @Override
     public void onPrepareForLoadingComplete() {
-        mInlineInputView.displayLoading();
+        mLoginPresenter.displayLoading();
+        //mInlineInputView.displayLoading();
     }
 
     @Override

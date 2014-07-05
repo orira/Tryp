@@ -140,4 +140,9 @@ public class LoginPresenterImpl extends AbstractPresenter implements LoginPresen
     private boolean isSignInButtonSelected(Button button) {
         return button.getText().toString().equals(mResources.getString(R.string.button_text_sign_in));
     }
+
+    @Override
+    public void displayLoading() {
+        mLoginView.displayLoading();
+    }
 }
